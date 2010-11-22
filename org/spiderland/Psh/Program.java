@@ -188,6 +188,73 @@ public class Program extends ObjectStack implements Serializable {
 	}
 
 	/**
+	 * Counts the number of internal nodes, i.e. non-atom instructions
+	 * @return Number of internal nodes
+	 */
+	public int internalNodeCount() {
+		int internalNodes = 0;
+
+		for (int i = 0; i < _size; i++) {
+			Object o = _stack[i];
+			if (o instanceof Program) {
+				internalNodes++;
+				internalNodes += ((Program) o).internalNodeCount();
+			}
+
+		}
+
+		return internalNodes;
+	}
+	
+	/**
+	 * Recursive function that finds the index of the nth internal node in the
+	 * program.
+	 * @param inInternalNode
+	 * @return If the internal node is found in this program, returns the index
+	 * 			within this program where it was found.
+	 * 		   If the node is not found, the negated current value of 
+	 * 			inInternalNode is returned.
+	 */
+	public int indexOfNthInternalNode(int inInternalNode){
+		for(int i = 0; i < _size; i++){
+			if(_stack[i] instanceof Program){
+				if(inInternalNode == 0){
+					return i;
+				}
+				inInternalNode--;
+			}
+		}
+		
+		// TODO NEED ANOTHER LOOP
+		int firstIndexInSubprogram = _size;
+		for (int i = 0; i < _size; i++) {
+			if (_stack[i] instanceof Program) {
+				// TODO works if is in first level, but will never get inside
+				// second internal node
+				
+				int result = ((Program) _stack[i])
+						.indexOfNthInternalNode(inInternalNode);
+			
+				if(result >= 0){
+					return result + firstIndexInSubprogram;
+				}
+				else {
+					inInternalNode = -result;
+					firstIndexInSubprogram += ((Program) _stack[i]).size();
+				}
+				
+			}
+		}
+		
+		return -inInternalNode;
+	}
+	
+	public int indexOfNthLeafNode(int inLeafNode){
+		
+		return -2999;
+	}
+
+	/**
 	 * Returns the size of a subtree.
 	 * 
 	 * @param inIndex

@@ -509,7 +509,7 @@ abstract public class PushGP extends GA {
 		PushGPIndividual i = (PushGPIndividual) ReproduceByClone(inIndex);
 
 		int totalsize = i._program.programsize();
-		int which = ReproductionNodeSelection(i);
+		int which = ReproductionNodeSelection(i);	
 		
 		int oldsize = i._program.SubtreeSize(which);
 		int newsize = 0;
@@ -541,7 +541,17 @@ abstract public class PushGP extends GA {
 	 * @return Index of the node to use for reproduction.
 	 */
 	protected int ReproductionNodeSelection(PushGPIndividual inInd) {
-		int totalSize = inInd._program.programsize();;
+		
+		try {
+			inInd._program = new Program("(float.* ((34 35) (64 43)) float.+ (5.0 14.3) (float.+) (2.5 (34 53)))");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		int totalSize = inInd._program.programsize();
 		int selectedNode = 0;
 		
 		if(totalSize <= 1){
@@ -552,9 +562,58 @@ abstract public class PushGP extends GA {
 		}
 		else if(_nodeSelectionMode.equals("leaf-probability")){
 			// TODO Implement. Currently runs unbiased
+	
+			// If there aren't any internal nodes, we must select a leaf node.
+			// If there aren't any leaf nodes, we must select an internal node.
+			int internalNodes = inInd._program.internalNodeCount();
+			int leafNodes = totalSize - internalNodes;
+			if((internalNodes == 0) || (leafNodes == 0)){
+				selectedNode = _RNG.nextInt(totalSize);
+			}
+			else {
+				float method = _RNG.nextInt(100);
+				
+				if(method <= _nodeSelectionLeafProbability){
+					// Choose a leaf node
+					
+					selectedNode = _RNG.nextInt(totalSize);
+					
+				}
+				else {
+					// Choose an internal node
+					int whichInternalNode = _RNG.nextInt(internalNodes);
+					
+					//TODO remove later
+					whichInternalNode = 6;
+					
+					selectedNode = inInd._program.indexOfNthInternalNode(whichInternalNode);
+					
+					System.out.println("\n\n" + inInd);
+					System.out.println("Subtrees indices:");
+					
+					for(int i = 0; i < 19; i++){
+						System.out.println(i + ": " + inInd._program.Subtree(i));
+					}
+					System.out.println();
+					
+					System.out.println("totalsize = " + totalSize);
+					System.out.println("internalNodes = " + internalNodes);
+					System.out.println("whichInternalNode = " + whichInternalNode);
+					System.out.println("selectedNode = " + selectedNode);
+					System.exit(0);
+					//TODO remove this debug code
+					
+					
+				}
+				
+				
+			}
 			
-			// note: if there aren't any internal nodes, must select leaf, and
-			// if no leaf, must select internal
+			
+			System.out.println("\n\n" + inInd);
+			System.out.println("internal nodes = " + inInd._program.internalNodeCount());
+			System.out.println("total size = " + totalSize);
+			System.exit(0);
 			
 			selectedNode = _RNG.nextInt(totalSize);
 		}
