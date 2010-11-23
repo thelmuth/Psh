@@ -17,6 +17,7 @@
 package org.spiderland.Psh;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * A Push program.
@@ -207,17 +208,17 @@ public class Program extends ObjectStack implements Serializable {
 	}
 	
 	/**
-	 * Recursive function that finds the index of the nth internal node in the
-	 * program.
+	 * Finds the index of the nth internal node in the program.
 	 * @param inInternalNode
 	 * @return If the internal node is found in this program, returns the index
 	 * 			within this program where it was found.
-	 * 		   If the node is not found, the negated current value of 
-	 * 			inInternalNode is returned.
+	 * 		   If the node is not found, -1 is returned.
 	 */
 	public int indexOfNthInternalNode(int inInternalNode){
-		for(int i = 0; i < _size; i++){
-			if(_stack[i] instanceof Program){
+		ArrayList<Object> nodes = createNodeList();
+		
+		for(int i = 0; i < nodes.size(); i++){
+			if(nodes.get(i) instanceof Program){
 				if(inInternalNode == 0){
 					return i;
 				}
@@ -225,33 +226,45 @@ public class Program extends ObjectStack implements Serializable {
 			}
 		}
 		
-		// TODO NEED ANOTHER LOOP
-		int firstIndexInSubprogram = _size;
-		for (int i = 0; i < _size; i++) {
-			if (_stack[i] instanceof Program) {
-				// TODO works if is in first level, but will never get inside
-				// second internal node
-				
-				int result = ((Program) _stack[i])
-						.indexOfNthInternalNode(inInternalNode);
-			
-				if(result >= 0){
-					return result + firstIndexInSubprogram;
+		return -1;
+	}
+	
+	/**
+	 * Finds the index of the nth leaf node in the program.
+	 * @param inLeafNode
+	 * @return If the leaf node is found in this program, returns the index
+	 * 			within this program where it was found.
+	 * 		   If the node is not found, -1 is returned.
+	 */
+	public int indexOfNthLeafNode(int inLeafNode){
+		ArrayList<Object> nodes = createNodeList();
+		
+		for(int i = 0; i < nodes.size(); i++){
+			if(!(nodes.get(i) instanceof Program)){
+				if(inLeafNode == 0){
+					return i;
 				}
-				else {
-					inInternalNode = -result;
-					firstIndexInSubprogram += ((Program) _stack[i]).size();
-				}
-				
+				inLeafNode--;
 			}
 		}
 		
-		return -inInternalNode;
+		return -1;
 	}
 	
-	public int indexOfNthLeafNode(int inLeafNode){
+	private ArrayList<Object> createNodeList() {
+		ArrayList<Object> nodes = new ArrayList<Object>();
 		
-		return -2999;
+		for(int i = 0; i < _size; i++){
+			nodes.add(_stack[i]);
+		}
+
+		for(int i = 0; i < _size; i++){
+			if(_stack[i] instanceof Program){
+				nodes.addAll(((Program) _stack[i]).createNodeList());
+			}
+		}
+		
+		return nodes;
 	}
 
 	/**
