@@ -53,10 +53,12 @@ public abstract class GA implements Serializable {
 	protected Class<?> _individualClass;
 
 	protected transient OutputStream _outputStream;
+	boolean _alsoPrintToOutput;
 
 	protected Checkpoint _checkpoint;
 	protected String _checkpointPrefix;
 	protected String _outputfile;
+	protected boolean _verbose;
 
 	/**
 	 * Factor method for creating a GA object, with the GA class specified by
@@ -132,7 +134,7 @@ public abstract class GA implements Serializable {
 	 *            the name of the parameter.
 	 */
 
-	protected String GetParam(String inName) throws Exception {
+	public String GetParam(String inName) throws Exception {
 		return GetParam(inName, false);
 	}
 
@@ -149,7 +151,7 @@ public abstract class GA implements Serializable {
 	 * @return the string value for the parameter.
 	 */
 
-	protected String GetParam(String inName, boolean inOptional)
+	public String GetParam(String inName, boolean inOptional)
 			throws Exception {
 		String value = _parameters.get(inName);
 
@@ -168,7 +170,7 @@ public abstract class GA implements Serializable {
 	 *            the name of the parameter.
 	 */
 
-	protected float GetFloatParam(String inName) throws Exception {
+	public float GetFloatParam(String inName) throws Exception {
 		return GetFloatParam(inName, false);
 	}
 
@@ -185,7 +187,7 @@ public abstract class GA implements Serializable {
 	 * @return the float value for the parameter.
 	 */
 
-	protected float GetFloatParam(String inName, boolean inOptional)
+	public float GetFloatParam(String inName, boolean inOptional)
 			throws Exception {
 		String value = _parameters.get(inName);
 
@@ -211,6 +213,7 @@ public abstract class GA implements Serializable {
 		// given.
 		int defaultTrivialGeographyRadius = 0;
 		String defaultIndividualClass = "org.spiderland.Psh.PushGPIndividual";
+		boolean defaultVerbose = true;
 		
 		String individualClass = GetParam("individual-class", true);
 		if(individualClass == null){
@@ -231,15 +234,32 @@ public abstract class GA implements Serializable {
 			_trivialGeographyRadius = (int) GetFloatParam("trivial-geography-radius", true);
 		}
 		
+		// verbose is an optional parameter
+		String verboseString = GetParam("verbose", true);
+		if(verboseString == null){
+			_verbose = defaultVerbose;
+		}
+		else {
+			if(verboseString.equals("true")){
+				_verbose = true;
+			} else if (verboseString.equals("false")) {
+				_verbose = false;
+			} else {
+				_verbose = defaultVerbose;
+			}
+		}
+		
 		_checkpointPrefix = GetParam("checkpoint-prefix", true);
 		_checkpoint = new Checkpoint(this);
 
 		ResizeAndInitialize((int) GetFloatParam("population-size"));
 
 		_outputfile = GetParam("output-file", true);
-
-		if (_outputfile != null)
-			_outputStream = new FileOutputStream(new File(_outputfile));
+		if (_outputfile != null){
+			_outputStream = new FileOutputStream(new File(_outputfile), true);
+			_alsoPrintToOutput = true;
+		}
+		
 	}
 
 	/**
@@ -394,23 +414,32 @@ public abstract class GA implements Serializable {
 	/**
 	 * Prints out population report statistics. This method may be overridden by
 	 * subclasses to customize GA behavior.
+	 * @throws Exception 
 	 */
+	protected String Report(){
+		String report = "";
 
-	protected String Report() {
-		String report = "\n";
-		report += ";;--------------------------------------------------------;;\n";
-		report += ";;---------------";
-		report += " Report for Generation " + _generationCount + " ";
-		
-		if(_generationCount < 10)
-			report += "-";
-		if(_generationCount < 100)
-			report += "-";
-		if(_generationCount < 1000)
-			report += "-";
-		
-		report += "-------------;;\n";
-		report += ";;--------------------------------------------------------;;\n";
+		if (_verbose) {
+			report += "\n";
+			report += ";;--------------------------------------------------------;;\n";
+			report += ";;---------------";
+			report += " Report for Generation " + _generationCount + " ";
+
+			if (_generationCount < 10)
+				report += "-";
+			if (_generationCount < 100)
+				report += "-";
+			if (_generationCount < 1000)
+				report += "-";
+
+			report += "-------------;;\n";
+			report += ";;--------------------------------------------------------;;\n";
+
+		} else {
+			System.out.print(".");
+			if ((_generationCount + 1) % 50 == 0)
+				System.out.print("\n");
+		}
 
 		return report;
 	}
@@ -438,12 +467,18 @@ public abstract class GA implements Serializable {
 	 * stdout, or a file).
 	 */
 
-	protected void Print(String inStr) throws Exception {
+	public void Print(String inStr) throws Exception {
 		if (_outputStream != null) {
 			_outputStream.write(inStr.getBytes());
 			_outputStream.flush();
 		}
+		
 		_checkpoint.report.append(inStr);
+		
+		if(_alsoPrintToOutput){
+			System.out.write(inStr.getBytes());
+			System.out.flush();
+		}
 	}
 
 	/**

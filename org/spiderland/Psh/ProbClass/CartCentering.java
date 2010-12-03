@@ -58,9 +58,11 @@ public class CartCentering extends PushGP {
 			Float x = new Float(singleCase.peek(0).toString());
 			Float v = new Float(singleCase.peek(1).toString());
 
-			Print(";; Fitness case #" + i + " position: " + x + " velocity: " + v
-					+ "\n");
-
+			if (_verbose) {
+				Print(";; Fitness case #" + i + " position: " + x
+						+ " velocity: " + v + "\n");
+			}
+			
 			ObjectPair xv = new ObjectPair(x,v);
 			
 			_testCases.add(new GATestCase(xv, null));

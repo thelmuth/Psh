@@ -53,9 +53,11 @@ public class FloatClassification extends PushGP {
 			Float in = new Float(p.peek(0).toString());
 			Float out = new Float(p.peek(1).toString());
 
-			Print(";; Fitness case #" + i + " input: " + in + " output: " + out
-					+ "\n");
-
+			if (_verbose) {
+				Print(";; Fitness case #" + i + " input: " + in + " output: "
+						+ out + "\n");
+			}
+			
 			_testCases.add(new GATestCase(in, out));
 		}
 	}

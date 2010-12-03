@@ -210,35 +210,39 @@ abstract public class PushGP extends GA {
 		super.InitFromParameters();
 
 		// Print important parameters
-		Print("  Important Parameters\n");
-		Print(" ======================\n");
+		if (_verbose) {
+			Print("  Important Parameters\n");
+			Print(" ======================\n");
 
-		if(!_targetFunctionString.equals("")){
-			Print("Target Function: " + _targetFunctionString + "\n\n");
+			if (!_targetFunctionString.equals("")) {
+				Print("Target Function: " + _targetFunctionString + "\n\n");
+			}
+
+			Print("Population Size: " + (int) GetFloatParam("population-size")
+					+ "\n");
+			Print("Generations: " + _maxGenerations + "\n");
+			Print("Execution Limit: " + _executionLimit + "\n\n");
+
+			Print("Crossover Percent: " + _crossoverPercent + "\n");
+			Print("Mutation Percent: " + _mutationPercent + "\n");
+			Print("Simplification Percent: " + _simplificationPercent + "\n");
+			Print("Clone Percent: "
+					+ (100 - _crossoverPercent - _mutationPercent - _simplificationPercent)
+					+ "\n\n");
+
+			Print("Tournament Size: " + _tournamentSize + "\n");
+			if (_trivialGeographyRadius != 0) {
+				Print("Trivial Geography Radius: " + _trivialGeographyRadius
+						+ "\n");
+			}
+			Print("Node Selection Mode: " + _nodeSelectionMode);
+			Print("\n");
+
+			Print("Instructions: " + _interpreter.GetInstructionsString()
+					+ "\n");
+
+			Print("\n");
 		}
-		
-		Print("Population Size: " + (int) GetFloatParam("population-size")
-				+ "\n");
-		Print("Generations: " + _maxGenerations + "\n");
-		Print("Execution Limit: " + _executionLimit + "\n\n");
-
-		Print("Crossover Percent: " + _crossoverPercent + "\n");
-		Print("Mutation Percent: " + _mutationPercent + "\n");
-		Print("Simplification Percent: " + _simplificationPercent + "\n");
-		Print("Clone Percent: "
-				+ (100 - _crossoverPercent - _mutationPercent - _simplificationPercent)
-				+ "\n\n");
-
-		Print("Tournament Size: " + _tournamentSize + "\n");
-		if (_trivialGeographyRadius != 0) {
-			Print("Trivial Geography Radius: " + _trivialGeographyRadius + "\n");
-		}
-		Print("Node Selection Mode: " + _nodeSelectionMode);
-		Print("\n");
-
-		Print("Instructions: " + _interpreter.GetInstructionsString() + "\n");
-
-		Print("\n");
 		
 	}
 
@@ -314,45 +318,50 @@ abstract public class PushGP extends GA {
 			throws Exception;
 
 	protected String Report() {
-		String report = super.Report();
+		String report = "";
+		report = super.Report();
+		
+		if (_verbose) {
+			if (Double.isInfinite(_populationMeanFitness))
+				_populationMeanFitness = Double.MAX_VALUE;
 
-		if (Double.isInfinite(_populationMeanFitness))
-			_populationMeanFitness = Double.MAX_VALUE;
+			report += ";; Best Program:\n  "
+					+ _populations[_currentPopulation][_bestIndividual]
+					+ "\n\n";
 
-		report += ";; Best Program:\n  "
-				+ _populations[_currentPopulation][_bestIndividual] + "\n\n";
-
-		report += ";; Best Program Fitness (mean): " + _bestMeanFitness + "\n";
-		if (_testCases.size() == _bestErrors.size()) {
-			report += ";; Best Program Errors: (";
-			for (int i = 0; i < _testCases.size(); i++) {
-				if (i != 0)
-					report += " ";
-				report += "(" + _testCases.get(i)._input + " ";
-				report += Math.abs(_bestErrors.get(i)) + ")";
+			report += ";; Best Program Fitness (mean): " + _bestMeanFitness
+					+ "\n";
+			if (_testCases.size() == _bestErrors.size()) {
+				report += ";; Best Program Errors: (";
+				for (int i = 0; i < _testCases.size(); i++) {
+					if (i != 0)
+						report += " ";
+					report += "(" + _testCases.get(i)._input + " ";
+					report += Math.abs(_bestErrors.get(i)) + ")";
+				}
+				report += ")\n";
 			}
-			report += ")\n";
+			report += ";; Best Program Size: " + _bestSize + "\n\n";
+
+			report += ";; Mean Fitness: " + _populationMeanFitness + "\n";
+			report += ";; Mean Program Size: " + _averageSize + "\n";
+
+			PushGPIndividual simplified = Autosimplify(
+					(PushGPIndividual) _populations[_currentPopulation][_bestIndividual],
+					_reportSimplifications);
+
+			report += ";; Number of Evaluations Thus Far: "
+					+ _interpreter.GetEvaluationExecutions() + "\n";
+			String mem = String
+					.valueOf(Runtime.getRuntime().totalMemory() / 10000000.0f);
+			report += ";; Memory usage: " + mem + "\n\n";
+
+			report += ";; Partial Simplification (may beat best):\n  ";
+			report += simplified._program + "\n";
+			report += ";; Partial Simplification Size: ";
+			report += simplified._program.programsize() + "\n\n";
 		}
-		report += ";; Best Program Size: " + _bestSize + "\n\n";
-
-		report += ";; Mean Fitness: " + _populationMeanFitness + "\n";
-		report += ";; Mean Program Size: " + _averageSize + "\n";
-
-		PushGPIndividual simplified = Autosimplify(
-				(PushGPIndividual) _populations[_currentPopulation][_bestIndividual],
-				_reportSimplifications);
-
-		report += ";; Number of Evaluations Thus Far: "
-				+ _interpreter.GetEvaluationExecutions() + "\n";
-		String mem = String
-				.valueOf(Runtime.getRuntime().totalMemory() / 10000000.0f);
-		report += ";; Memory usage: " + mem + "\n\n";
-
-		report += ";; Partial Simplification (may beat best):\n  ";
-		report += simplified._program + "\n";
-		report += ";; Partial Simplification Size: ";
-		report += simplified._program.programsize() + "\n\n";
-
+		
 		return report;
 	}
 

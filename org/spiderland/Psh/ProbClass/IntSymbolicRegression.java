@@ -62,8 +62,10 @@ public class IntSymbolicRegression extends PushGP {
 				Integer in = (Integer) testCase._first;
 				Integer out = (Integer) testCase._second;
 
-				Print(";; Fitness case #" + i + " input: " + in + " output: "
-						+ out + "\n");
+				if (_verbose) {
+					Print(";; Fitness case #" + i + " input: " + in
+							+ " output: " + out + "\n");
+				}
 
 				_testCases.add(new GATestCase(in, out));
 			}
@@ -80,10 +82,12 @@ public class IntSymbolicRegression extends PushGP {
 	
 				Integer in = new Integer(p.peek(0).toString());
 				Integer out = new Integer(p.peek(1).toString());
-	
-				Print(";; Fitness case #" + i + " input: " + in + " output: " + out
-						+ "\n");
-	
+
+				if (_verbose) {
+					Print(";; Fitness case #" + i + " input: " + in
+							+ " output: " + out + "\n");
+				}
+
 				_testCases.add(new GATestCase(in, out));
 			}
 		}
