@@ -208,37 +208,43 @@ abstract public class PushGP extends GA {
 
 		// Init the GA
 		super.InitFromParameters();
-
+		
 		// Print important parameters
 		if (_verbose) {
 			Print("  Important Parameters\n");
 			Print(" ======================\n");
 
 			if (!_targetFunctionString.equals("")) {
-				Print("Target Function: " + _targetFunctionString + "\n\n");
+				Print("target-function = " + _targetFunctionString + "\n\n");
 			}
 
-			Print("Population Size: " + (int) GetFloatParam("population-size")
+			Print("population-size = " + (int) GetFloatParam("population-size")
 					+ "\n");
-			Print("Generations: " + _maxGenerations + "\n");
-			Print("Execution Limit: " + _executionLimit + "\n\n");
+			Print("max-generations = " + _maxGenerations + "\n\n");
+			
+			Print("max-points = " + _maxPointsInProgram + "\n");
+			Print("max-random-code-points = " + _maxRandomCodeSize + "\n");
+			Print("evalpush-limit = " + _executionLimit + "\n\n");
 
-			Print("Crossover Percent: " + _crossoverPercent + "\n");
-			Print("Mutation Percent: " + _mutationPercent + "\n");
-			Print("Simplification Percent: " + _simplificationPercent + "\n");
-			Print("Clone Percent: "
+			Print("crossover-probability = " + _crossoverPercent + "\n");
+			Print("mutation-probability = " + _mutationPercent + "\n");
+			Print("simplification-probability = " + _simplificationPercent + "\n");
+			Print("clone-probability = "
 					+ (100 - _crossoverPercent - _mutationPercent - _simplificationPercent)
 					+ "\n\n");
 
-			Print("Tournament Size: " + _tournamentSize + "\n");
-			if (_trivialGeographyRadius != 0) {
-				Print("Trivial Geography Radius: " + _trivialGeographyRadius
-						+ "\n");
-			}
-			Print("Node Selection Mode: " + _nodeSelectionMode);
-			Print("\n");
-
-			Print("Instructions: " + _interpreter.GetInstructionsString()
+			Print("tournament-size = " + _tournamentSize + "\n");
+			Print("trivial-geography-radius = " + _trivialGeographyRadius + "\n\n");
+			
+			Print("node-selection-mode = " + _nodeSelectionMode + "\n");
+			Print("node-selection-leaf-probability = " + _nodeSelectionLeafProbability + "\n");
+			Print("node-selection-tournament-size = " + _nodeSelectionTournamentSize + "\n\n");
+			
+			Print("reproduction-simplifications = " + _reproductionSimplifications + "\n");
+			Print("report-simplifications = " + _reportSimplifications + "\n");
+			Print("final-report-simplifications = " + _finalSimplifications + "\n\n");
+			
+			Print("instructions = " + _interpreter.GetInstructionsString()
 					+ "\n");
 
 			Print("\n");
@@ -325,14 +331,14 @@ abstract public class PushGP extends GA {
 			if (Double.isInfinite(_populationMeanFitness))
 				_populationMeanFitness = Double.MAX_VALUE;
 
-			report += ";; Best Program:\n  "
+			report += "Best program: "
 					+ _populations[_currentPopulation][_bestIndividual]
 					+ "\n\n";
 
-			report += ";; Best Program Fitness (mean): " + _bestMeanFitness
+			report += "Best mean error: " + _bestMeanFitness
 					+ "\n";
 			if (_testCases.size() == _bestErrors.size()) {
-				report += ";; Best Program Errors: (";
+				report += "Errors: (";
 				for (int i = 0; i < _testCases.size(); i++) {
 					if (i != 0)
 						report += " ";
@@ -341,25 +347,28 @@ abstract public class PushGP extends GA {
 				}
 				report += ")\n";
 			}
-			report += ";; Best Program Size: " + _bestSize + "\n\n";
-
-			report += ";; Mean Fitness: " + _populationMeanFitness + "\n";
-			report += ";; Mean Program Size: " + _averageSize + "\n";
+			report += "Size: " + _bestSize + "\n\n";
 
 			PushGPIndividual simplified = Autosimplify(
 					(PushGPIndividual) _populations[_currentPopulation][_bestIndividual],
 					_reportSimplifications);
+			report += "Partial simplification (may beat best): ";
+			report += simplified._program + "\n";
+			report += "Partial simplification size: ";
+			report += simplified._program.programsize() + "\n\n";
 
-			report += ";; Number of Evaluations Thus Far: "
+			report += "--- Population Statistics ---\n";
+			report += "Average mean error in population: " + _populationMeanFitness + "\n";
+			report += "Average program size in population (points): " + _averageSize + "\n";
+
+			report += "Number of evaluations (may be inaccurate): "
 					+ _interpreter.GetEvaluationExecutions() + "\n";
 			String mem = String
 					.valueOf(Runtime.getRuntime().totalMemory() / 10000000.0f);
-			report += ";; Memory usage: " + mem + "\n\n";
+			report += "Memory usage: " + mem + "\n";
+			
+			report += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n\n";
 
-			report += ";; Partial Simplification (may beat best):\n  ";
-			report += simplified._program + "\n";
-			report += ";; Partial Simplification Size: ";
-			report += simplified._program.programsize() + "\n\n";
 		}
 		
 		return report;
@@ -371,25 +380,24 @@ abstract public class PushGP extends GA {
 		report += super.FinalReport();
 		
 		if(!_targetFunctionString.equals("")){
-			report += ">> Target Function: " + _targetFunctionString + "\n\n";
+			report += "Target function: " + _targetFunctionString + "\n\n";
 		}
 
 		PushGPIndividual simplified = Autosimplify(
 				(PushGPIndividual) _populations[_currentPopulation][_bestIndividual],
 				_finalSimplifications);
 
-		// Note: The number of evaluations here will likely be higher than that
-		// given during the last generational report, since evaluations made
-		// during simplification count towards the total number of
-		// simplifications.
-		report += ">> Number of Evaluations: "
-				+ _interpreter.GetEvaluationExecutions() + "\n";
-
-		report += ">> Best Program: "
+		if (Success()) {
+		report += "Successful program: "
 				+ _populations[_currentPopulation][_bestIndividual] + "\n";
-		report += ">> Fitness (mean): " + _bestMeanFitness + "\n";
+		}
+		else {
+		report += "Best failed program: "
+				+ _populations[_currentPopulation][_bestIndividual] + "\n";
+		}
+		report += "Mean error: " + _bestMeanFitness + "\n";
 		if (_testCases.size() == _bestErrors.size()) {
-			report += ">> Errors: (";
+			report += "Errors: (";
 			for (int i = 0; i < _testCases.size(); i++) {
 				if (i != 0)
 					report += " ";
@@ -398,12 +406,19 @@ abstract public class PushGP extends GA {
 			}
 			report += ")\n";
 		}
-		report += ">> Size: " + _bestSize + "\n\n";
+		report += "Size: " + _bestSize + "\n\n";
 
-		report += "<<<<<<<<<< After Simplification >>>>>>>>>>\n";
-		report += ">> Best Program: ";
+		// Note: The number of evaluations here will likely be higher than that
+		// given during the last generational report, since evaluations made
+		// during simplification count towards the total number of
+		// simplifications.
+		report += "Number of evaluations (may be inaccurate): "
+				+ _interpreter.GetEvaluationExecutions() + "\n\n";
+		
+		report += "<<<<<<<<<< After " + _finalSimplifications + " Simplifications >>>>>>>>>>\n";
+		report += "program: ";
 		report += simplified._program + "\n";
-		report += ">> Size: ";
+		report += "size: ";
 		report += simplified._program.programsize() + "\n\n";
 
 		return report;

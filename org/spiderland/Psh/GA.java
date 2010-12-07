@@ -58,7 +58,7 @@ public abstract class GA implements Serializable {
 	protected Checkpoint _checkpoint;
 	protected String _checkpointPrefix;
 	protected String _outputfile;
-	protected boolean _verbose;
+	public boolean _verbose;
 
 	/**
 	 * Factor method for creating a GA object, with the GA class specified by
@@ -421,20 +421,8 @@ public abstract class GA implements Serializable {
 
 		if (_verbose) {
 			report += "\n";
-			report += ";;--------------------------------------------------------;;\n";
-			report += ";;---------------";
-			report += " Report for Generation " + _generationCount + " ";
-
-			if (_generationCount < 10)
-				report += "-";
-			if (_generationCount < 100)
-				report += "-";
-			if (_generationCount < 1000)
-				report += "-";
-
-			report += "-------------;;\n";
-			report += ";;--------------------------------------------------------;;\n";
-
+			report += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n";
+			report += ";; -*- Report at generation " + _generationCount + "\n";
 		} else {
 			System.out.print(".");
 			if ((_generationCount + 1) % 50 == 0)
@@ -445,19 +433,17 @@ public abstract class GA implements Serializable {
 	}
 
 	protected String FinalReport() {
-		boolean success = Success();
 		String report = "\n";
 
-		report += "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
-		report += "                        ";
+		report += "<<<<<<<<<<<<<>>>>>>>>>>>>>\n";
 
-		if (success) {
-			report += "Success";
+		if (Success()) {
+			report += "SUCCESS";
 		} else {
-			report += "Failure";
+			report += "FAILURE";
 		}
-		report += " at Generation " + (_generationCount - 1) + "\n";
-		report += "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
+		report += " at generation " + (_generationCount - 1) + "\n";
+		report += "<<<<<<<<<<<<<>>>>>>>>>>>>>\n";
 
 		return report;
 	}
