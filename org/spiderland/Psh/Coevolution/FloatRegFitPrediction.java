@@ -21,6 +21,13 @@ import java.util.ArrayList;
 import org.spiderland.Psh.GAIndividual;
 import org.spiderland.Psh.PushGPIndividual;
 
+/**
+ * This fitness prediction class uses predictors that choose a small sample
+ * of the test cases to predict the fitness of all test cases.
+ * 
+ * @author Tom
+ *
+ */
 public class FloatRegFitPrediction extends PredictionGA {
 	private static final long serialVersionUID = 1L;
 

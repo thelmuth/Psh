@@ -716,7 +716,7 @@ public class Interpreter implements Serializable {
 
 	public Object RandomAtom() {
 		int index = _RNG.nextInt(_randomGenerators.size());
-
+		
 		return _randomGenerators.get(index).Generate(this);
 	}
 

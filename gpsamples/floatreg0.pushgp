@@ -14,7 +14,7 @@
 
 #
 # A sample PushGP file for a simple test symbolic regression problem.
-# In this demo, the system solves the equation y = x^2 - 7, using
+# In this demo, the system solves the equation y = x^2 - 2, using
 # floating point symbolic regression
 #
 # Tom Helmuth <thelmuth (at) cs.umass.edu>
@@ -40,8 +40,9 @@ reproduction-simplifications = 20
 report-simplifications = 100
 final-simplifications = 1000
 
-test-cases = ((-5 18) (-4 9) (-3 2) (-2 -3) (-1 -6) (0 -7) (1 -6) (2 -3) (3 2) (4 9) (5 18))
-instruction-set = (float.* float.+ float.- float./  float.dup float.flush float.stackdepth float.swap float.erc input.makeinputs1)
+test-cases = ((-5 23) (-4 14) (-3 7) (-2 2) (-1 -1) (0 -2) (1 -1) (2 2) (3 7) (4 14) (5 23))
+instruction-set = (float.* float.+ float.- float./  float.dup float.flush float.stackdepth float.swap float.frominteger float.erc input.makeinputs1)
+
 
 ### Setup Optional Parameters
 
@@ -53,4 +54,4 @@ fair-mutation-range = .5
 min-random-float = -10.0
 max-random-float = 10.0
 random-float-resolution = 1.0
-target-function-string = y = x^2 - 7
+target-function-string = y = x^2 - 2

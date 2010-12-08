@@ -275,7 +275,7 @@ abstract public class PushGP extends GA {
 
 		for (int n = 0; n < _populations[_currentPopulation].length; n++) {
 			GAIndividual i = _populations[_currentPopulation][n];
-
+			
 			EvaluateIndividual(i);
 
 			totalFitness += i.GetFitness();
@@ -551,10 +551,10 @@ abstract public class PushGP extends GA {
 			newtree = _interpreter.RandomAtom();
 		else
 			newtree = _interpreter.RandomCode(newsize);
-
+		
 		if (newsize + totalsize - oldsize <= _maxPointsInProgram)
 			i._program.ReplaceSubtree(which, newtree);
-
+		
 		return i;
 	}
 	

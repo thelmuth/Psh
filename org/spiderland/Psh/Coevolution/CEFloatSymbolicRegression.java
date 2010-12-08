@@ -123,7 +123,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 	
 	@Override
 	protected void BeginGeneration() throws Exception {
-		//trh Temporary solution, needs to actually use effort info
+		//TODO Temporary solution, needs to actually use effort info
 		if(_generationCount % 2 == 1){
 			_predictorGA.Run(1);			
 		}	
@@ -135,7 +135,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 	protected void PredictIndividual(GAIndividual inIndividual,
 			boolean duringSimplify) {
 		
-		FloatRegFitPredictionIndividual predictor = (FloatRegFitPredictionIndividual) _predictorGA.GetBestPredictor();
+		PredictionGAIndividual predictor = (PredictionGAIndividual) _predictorGA.GetBestPredictor();
 		float fitness = predictor.PredictSolutionFitness((PushGPIndividual) inIndividual);
 
 		inIndividual.SetFitness(fitness);
@@ -247,7 +247,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 		for (int n = 0; n < _populations[_currentPopulation].length; n++) {
 			GAIndividual i = _populations[_currentPopulation][n];
 
-			PredictIndividual(i, false);
+			PredictIndividual(i, false); // Changed from EvaluateIndividual
 
 			totalFitness += i.GetFitness();
 			

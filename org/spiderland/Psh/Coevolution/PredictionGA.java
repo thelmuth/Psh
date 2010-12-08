@@ -198,15 +198,15 @@ public abstract class PredictionGA extends GA {
 	}
 	
 	protected String Report() {
-		String report = super.Report();
-		report = report.replace('-', '#');
-		report = report.replaceFirst("Report for", " Predictor");
+		String report = "";
+		report += ";;########################################################;;\n";
+		report += ";; -*- Predictor report for predictor generation " + GetGenerationCount() + "\n";
 
-		report += ";; Best Predictor: "
+		report += "Best predictor: "
 				+ _populations[_currentPopulation][_bestIndividual] + "\n";
-		report += ";; Best Predictor Fitness: " + _bestMeanFitness + "\n\n";
+		report += "Best predictor fitness: " + _bestMeanFitness + "\n\n";
 
-		report += ";; Mean Predictor Fitness: " + _populationMeanFitness + "\n";
+		report += "Mean predictor fitness: " + _populationMeanFitness + "\n";
 				
 		// The following code prints all of the predictors.
 		/*
