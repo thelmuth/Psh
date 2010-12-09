@@ -56,14 +56,70 @@ public class PushFitnessPrediction extends PredictionGA {
 
 	@Override
 	protected GAIndividual ReproduceByMutation(int inIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		PushGPIndividual i = (PushGPIndividual) ReproduceByClone(inIndex);
+
+		int totalsize = i._program.programsize();
+		int which = NodeSelection(i);
+
+		int oldsize = i._program.SubtreeSize(which);
+		int newsize = 0;
+
+		// No size fair mutation in the Prediction GA for now...
+		// if (_useFairMutation) {
+		// int range = (int) Math.max(1, _fairMutationRange * oldsize);
+		// newsize = Math.max(1, oldsize + _RNG.nextInt(2 * range) - range);
+		// } else {
+		newsize = _RNG.nextInt(_maxRandomCodeSize);
+		// }
+
+		Object newtree;
+
+		if (newsize == 1)
+			newtree = _interpreter.RandomAtom();
+		else
+			newtree = _interpreter.RandomCode(newsize);
+
+		if (newsize + totalsize - oldsize <= _maxPointsInProgram)
+			i._program.ReplaceSubtree(which, newtree);
+
+		return i;
 	}
 	
 	@Override
 	protected GAIndividual ReproduceByCrossover(int inIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		PushGPIndividual a = (PushGPIndividual) ReproduceByClone(inIndex);
+		PushGPIndividual b = (PushGPIndividual) TournamentSelect(
+				_tournamentSize, inIndex);
+
+		if (a._program.programsize() <= 0) {
+			return b;
+		}
+		if (b._program.programsize() <= 0) {
+			return a;
+		}
+		
+		int aindex = NodeSelection(a);
+		int bindex = NodeSelection(b);
+		
+		if (a._program.programsize() + b._program.SubtreeSize(bindex)
+				- a._program.SubtreeSize(aindex) <= _maxPointsInProgram)
+			a._program.ReplaceSubtree(aindex, b._program.Subtree(bindex));
+
+		return a;
 	}
 
+	private int NodeSelection(PushGPIndividual inInd){
+		int totalSize = inInd._program.programsize();
+		int selectedNode = 0;
+		
+		if(totalSize <= 1){
+			selectedNode = 0;
+		}
+		else {
+			selectedNode = _RNG.nextInt(totalSize);
+		}
+		
+		return selectedNode;
+	}
+	
 }
