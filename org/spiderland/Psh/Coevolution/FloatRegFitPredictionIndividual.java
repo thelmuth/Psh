@@ -51,7 +51,6 @@ public class FloatRegFitPredictionIndividual extends PredictionGAIndividual {
 		_solutionGA = inSolutionGA;
 	}
 	
-
 	/**
 	 * Gets the given sample index
 	 * 

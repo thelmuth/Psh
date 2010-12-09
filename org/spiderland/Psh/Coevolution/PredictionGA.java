@@ -19,10 +19,7 @@ package org.spiderland.Psh.Coevolution;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.spiderland.Psh.GA;
-import org.spiderland.Psh.GAIndividual;
-import org.spiderland.Psh.PushGP;
-import org.spiderland.Psh.PushGPIndividual;
+import org.spiderland.Psh.*;
 
 /**
  * An abstract class for a population of co-evolving predictors of fitness,
@@ -197,6 +194,44 @@ public abstract class PredictionGA extends GA {
 		EvaluateTrainerFitnesses();
 	}
 	
+	/**
+	 * Evaluates a PredictionGAIndividual's fitness, based on the difference
+	 * between the predictions of the fitnesses of the trainers and the actual
+	 * fitnesses of the trainers.
+	 */
+	@Override
+	protected void EvaluateIndividual(GAIndividual inIndividual) {
+		ArrayList<Float> errors = new ArrayList<Float>();
+
+		for (int i = 0; i < _trainerPopulationSize; i++) {
+			float error = EvaluateTestCase(inIndividual, _trainerPopulation
+					.get(i), _trainerPopulation.get(i).GetFitness());
+			errors.add(error);
+		}
+
+		inIndividual.SetFitness(AbsoluteAverageOfErrors(errors));
+		inIndividual.SetErrors(errors);
+	}
+
+	/**
+	 * Determines the predictor's fitness on a trainer, where the trainer is the
+	 * inInput, and the trainer's actual fitness (or rank, whatever is to be
+	 * predicted) is inOutput.
+	 * 
+	 * @return Predictor's fitness (or rank, etc.) for the given trainer.
+	 */
+	@Override
+	public float EvaluateTestCase(GAIndividual inIndividual, Object inInput,
+			Object inOutput) {
+		PushGPIndividual trainer = (PushGPIndividual) inInput;
+		float trainerFitness = (Float) inOutput;
+
+		float predictedTrainerFitness = ((PredictionGAIndividual) inIndividual)
+				.PredictSolutionFitness(trainer);
+
+		return Math.abs(predictedTrainerFitness) - Math.abs(trainerFitness);
+	}
+	
 	protected String Report() {
 		String report = "";
 		report += ";;########################################################;;\n";
@@ -251,24 +286,6 @@ public abstract class PredictionGA extends GA {
 	@Override
 	protected abstract void InitIndividual(GAIndividual inIndividual);
 
-	/**
-	 * Evaluates a PredictionGAIndividual's fitness, based on the difference
-	 * between the predictions of the fitnesses of the trainers and the actual
-	 * fitnesses of the trainers.
-	 */
-	@Override
-	protected abstract void EvaluateIndividual(GAIndividual inIndividual);
-
-	/**
-	 * Determines the predictor's fitness on a trainer, where the trainer is the
-	 * inInput, and the trainer's actual fitness (or rank, whatever is to be
-	 * predicted) is inOutput.
-	 * 
-	 * @return Predictor's fitness (or rank, etc.) for the given trainer.
-	 */
-	@Override
-	public abstract float EvaluateTestCase(GAIndividual inIndividual,
-			Object inInput, Object inOutput);
 
 	/**
 	 * Actual fitnesses of trainers will always be stored as part of the

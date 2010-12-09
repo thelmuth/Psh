@@ -16,10 +16,7 @@
 
 package org.spiderland.Psh.Coevolution;
 
-import java.util.ArrayList;
-
-import org.spiderland.Psh.GAIndividual;
-import org.spiderland.Psh.PushGPIndividual;
+import org.spiderland.Psh.*;
 
 /**
  * This fitness prediction class uses predictors that choose a small sample
@@ -30,7 +27,7 @@ import org.spiderland.Psh.PushGPIndividual;
  */
 public class FloatRegFitPrediction extends PredictionGA {
 	private static final long serialVersionUID = 1L;
-
+	
 	@Override
 	protected void InitIndividual(GAIndividual inIndividual) {
 		FloatRegFitPredictionIndividual i = (FloatRegFitPredictionIndividual) inIndividual;
@@ -40,47 +37,6 @@ public class FloatRegFitPrediction extends PredictionGA {
 			samples[j] = _RNG.nextInt(_solutionGA._testCases.size());
 		}
 		i.SetSampleIndicesAndSolutionGA(_solutionGA, samples);
-	}
-
-	@Override
-	protected void EvaluateIndividual(GAIndividual inIndividual) {
-		
-		FloatRegFitPredictionIndividual predictor = (FloatRegFitPredictionIndividual) inIndividual;
-		ArrayList<Float> errors = new ArrayList<Float>();
-
-		for(int i = 0; i < _trainerPopulationSize; i++){			
-			float predictedError = predictor.PredictSolutionFitness(_trainerPopulation.get(i));
-			
-			// Error is difference between predictedError and the actual fitness
-			// of the trainer.
-			float error = Math.abs(predictedError) - Math.abs(_trainerPopulation.get(i).GetFitness());
-			errors.add(error);
-		}
-		
-		predictor.SetFitness(AbsoluteAverageOfErrors(errors));
-		predictor.SetErrors(errors);
-	}
-
-	/**
-	 * Determines the predictor's fitness on a trainer, where the trainer is the
-	 * inInput, and the trainer's actual fitness is inOutput. The fitness of
-	 * the predictor is the absolute error between the prediction and the
-	 * trainer's actual fitness.
-	 * 
-	 * @return Predictor's fitness (i.e. error) for the given trainer.
-	 * @throws Exception 
-	 */
-	@Override
-	public float EvaluateTestCase(GAIndividual inIndividual, Object inInput,
-			Object inOutput) {
-
-		PushGPIndividual trainer = (PushGPIndividual) inInput;
-		float trainerFitness = (Float) inOutput;
-
-		float predictedTrainerFitness = ((PredictionGAIndividual) inIndividual)
-				.PredictSolutionFitness(trainer);
-
-		return Math.abs(predictedTrainerFitness - trainerFitness);
 	}
 
 	@Override
