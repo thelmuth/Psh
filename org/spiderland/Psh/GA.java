@@ -322,8 +322,8 @@ public abstract class GA implements Serializable {
 
 			EndGeneration();
 			
-			Print(Report());
-
+			Print(Report());			
+			
 			Checkpoint();
 
 			System.gc();
@@ -374,7 +374,7 @@ public abstract class GA implements Serializable {
 			GAIndividual i = _populations[_currentPopulation][n];
 			
 			EvaluateIndividual(i);
-
+			
 			totalFitness += i.GetFitness();
 
 			if (i.GetFitness() < _bestMeanFitness) {
@@ -383,7 +383,7 @@ public abstract class GA implements Serializable {
 				_bestErrors = i.GetErrors();
 			}
 		}
-
+		
 		_populationMeanFitness = totalFitness / _populations[_currentPopulation].length;
 	}
 

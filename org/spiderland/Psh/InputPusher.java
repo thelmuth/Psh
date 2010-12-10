@@ -36,12 +36,15 @@ public class InputPusher implements Serializable {
 			} else if (inObject instanceof Boolean) {
 				booleanStack bstack = inI.boolStack();
 				bstack.push((Boolean) inObject);
-
+			} else if( inObject instanceof Program){
+				ObjectStack cstack = inI.codeStack();
+				cstack.push((Program) inObject);
 			} else {
 				System.err.println("Error during input.index - object "
 						+ inObject.getClass()
 						+ " is not a legal object according to "
 						+ this.getClass() + ".");
+				System.exit(0);
 			}
 		}
 	}

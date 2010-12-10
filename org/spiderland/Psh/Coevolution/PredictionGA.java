@@ -99,6 +99,12 @@ public abstract class PredictionGA extends GA {
 			_trainerPopulation.add(newTrainer);
 			
 			EvaluateTrainerFitnesses();
+		
+			
+
+			
+			
+			System.exit(0);//TODO remove
 			
 		}
 	}
@@ -211,6 +217,28 @@ public abstract class PredictionGA extends GA {
 
 		inIndividual.SetFitness(AbsoluteAverageOfErrors(errors));
 		inIndividual.SetErrors(errors);
+		
+		
+		//TODO REMOVE
+		/*
+		if(inIndividual.GetFitness() > 10000000){
+			System.out.println(errors);
+			System.out.println("pppppppp");
+
+			for (int i = 0; i < _trainerPopulationSize; i++) {
+				float pred = ((PredictionGAIndividual) inIndividual)
+						.PredictSolutionFitness(_trainerPopulation.get(i));
+				float actual = _trainerPopulation.get(i).GetFitness();
+				System.out.println("Trainer: " + _trainerPopulation.get(i));
+				System.out.println("Predicted trainer fitness = " + pred);
+				System.out.println("Actual trainer fitness = " + actual + "\n");
+				
+			}
+			
+			System.exit(0);
+		}
+		*/
+		
 	}
 
 	/**
@@ -244,15 +272,25 @@ public abstract class PredictionGA extends GA {
 		report += "Mean predictor fitness: " + _populationMeanFitness + "\n";
 				
 		// The following code prints all of the predictors.
-		/*
-		report += "\n;; Mean Predictor Fitness: \n";
+		
+		report += "\n\nPredictors:\n";
 		for(GAIndividual predictor : _populations[_currentPopulation]){
-			report += "          " + predictor + "\n";
-			
+			report += predictor + "\n";
+
+			report += "   fitness = " + predictor.GetFitness() + "\n";
+			report += "   errors = " + predictor.GetErrors() + "\n\n";
 		}
-		*/
 		
 		report += ";;########################################################;;\n\n";
+		
+
+		report += "\n\nTrainers:\n\n";
+		for(PushGPIndividual ind : _trainerPopulation){
+			report += ind + "\n";
+			report += "   fitness = " + ind.GetFitness() + "\n";
+			report += "   errors = " + ind.GetErrors() + "\n\n";
+		}
+		
 		
 		return report;
 	}

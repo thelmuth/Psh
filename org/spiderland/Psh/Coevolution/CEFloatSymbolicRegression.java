@@ -186,10 +186,12 @@ public class CEFloatSymbolicRegression extends PushGP {
 		
 		GAIndividual best = _populations[_currentPopulation][_bestIndividual];
 		float predictedFitness = best.GetFitness();
+		ArrayList<Float> predictedErrors = best.GetErrors();
 		
 		_predictorGA.EvaluateSolutionIndividual((PushGPIndividual) best);
 		
 		_bestMeanFitness = best.GetFitness();
+		_bestErrors = best.GetErrors();
 		
 		if(_bestMeanFitness <= 0.1){
 			_success = true;
@@ -197,14 +199,64 @@ public class CEFloatSymbolicRegression extends PushGP {
 		}
 		
 		best.SetFitness(predictedFitness);
+		best.SetErrors(predictedErrors);
 		return false;
 	}
 	
 	protected String Report() {
 		Success(); // Finds the real fitness of the best individual
 		
-		return super.Report();
+		String report = super.Report();
+		
+		String predictorReport = "Predicted mean error: "
+				+ _populations[_currentPopulation][_bestIndividual]
+						.GetFitness() + "\n";
+		predictorReport += "Size:";
+
+		report = report.replaceAll("Size:", predictorReport);
+		
+		/*
+		if(_populations[_currentPopulation][_bestIndividual]
+						.GetFitness() != 1000000.0f){
+			System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWW");//TODO remove
+			System.out.println(_populations[_currentPopulation][_bestIndividual]
+						.GetFitness());
+			System.exit(0);
+		}
+		*/
+		
+		return report;
 	}
+
+protected String FinalReport() {
+	String report = "";
+	
+	report += super.FinalReport();
+	//report = report.replaceAll("Mean error", "Mean error (predicted)");
+	//report = report.replaceAll("Total error", "Total error (predicted)");
+	
+	// Find actual fitness of best individual
+	PushGPIndividual bestIndividual = (PushGPIndividual) _populations[_currentPopulation][_bestIndividual];
+	_predictorGA.EvaluateSolutionIndividual(bestIndividual);
+	
+	report += "<<<<<<<<<< Best Program Actual Fitness >>>>>>>>>>\n";
+	report += "Mean error: " + bestIndividual.GetFitness() + "\n";
+	
+	ArrayList<Float> bestErrors = bestIndividual.GetErrors();
+	if (_testCases.size() == bestErrors.size()) {
+		report += "Errors: (";
+		for (int i = 0; i < _testCases.size(); i++) {
+			if (i != 0)
+				report += " ";
+			report += "(" + _testCases.get(i)._input + " ";
+			report += Math.abs(bestErrors.get(i)) + ")";
+		}
+		report += ")\n";
+	}
+	report += "\n";
+	
+	return report;
+}
 
 	private HashMap<String, String> GetPredictorParameters(
 			HashMap<String, String> parameters) throws Exception {

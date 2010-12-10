@@ -53,8 +53,8 @@ target-function-string = y = x^2 - 3x
 problem-class = org.spiderland.Psh.Coevolution.CEFloatSymbolicRegression
 test-cases = ((-3 18) (-2 10) (-1 4) (0 0) (1 -2) (2 -2) (3 0))
 
-instruction-set = (registered.float input.makeinputs1)
-#instruction-set = (input.makeinputs1 float.+ float.- float.* float./ float.exp float.sin float.cos)
+#instruction-set = (registered.float input.makeinputs1)
+instruction-set = (input.makeinputs1 float.+ float.- float.* float./ float.exp float.sin float.cos)
 
 ### Setup predictor GP parameters
 
@@ -64,11 +64,11 @@ PREDICTOR-population-size = 10
 PREDICTOR-effort-percent = 5
 
 PREDICTOR-trainer-population-size = 10
-PREDICTOR-generations-between-trainers = 20
+PREDICTOR-generations-between-trainers = 5
 
 PREDICTOR-mutation-percent = 25
 PREDICTOR-crossover-percent = 70
 
-PREDICTOR-tournament-size = 2
+PREDICTOR-tournament-size = 4
 PREDICTOR-trivial-geography-radius = 0
 

@@ -18,17 +18,18 @@ package org.spiderland.Psh.Coevolution;
 
 import org.spiderland.Psh.*;
 
-public class PushFitnessPredictionIndividual extends PredictionGAIndividual{
+public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 	private static final long serialVersionUID = 1L;
-	
-	protected Program _program;
-	protected Interpreter _interpreter; // The interpreter of the PushFitnessPrediction GA
-	
+
+	public Program _program;
+	protected Interpreter _interpreter; // The interpreter of the
+										// PushFitnessPrediction GA
+
 	protected int _executionLimit;
-	
+
 	public PushFitnessPredictionIndividual() {
 	}
-	
+
 	public PushFitnessPredictionIndividual(Program inProgram) {
 		_program = inProgram;
 	}
@@ -37,10 +38,11 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual{
 		_program = inProgram;
 		_interpreter = inI;
 	}
-	
+
 	@Override
 	public float PredictSolutionFitness(PushGPIndividual pgpIndividual) {
-		//TODO test this once everything else is up and running
+		// TODO test this once everything else is up and running
+
 		_interpreter.ClearStacks();
 
 		// Set input
@@ -50,23 +52,28 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual{
 
 		// Run prediction program
 		_interpreter.Execute(_program, _executionLimit);
-		
+
 		// Predict very large fitness if there is no result on the stack.
-		if(_interpreter.floatStack().size() == 0){
+		if (_interpreter.floatStack().size() == 0) {
 			return 1000000;
 		}
 		
 		// Get result
 		float predictedFitness = _interpreter.floatStack().top();
 
+		//TODO remove
+		//System.out.println("woooo good result");
+		//System.out.println(predictedFitness);
+		//System.exit(0);
+		
 		return predictedFitness;
 	}
 
 	@Override
 	public GAIndividual clone() {
-		return new PushFitnessPredictionIndividual(_program);
+		return new PushFitnessPredictionIndividual(_program, _interpreter);
 	}
-	
+
 	public void SetProgram(Program inProgram) {
 		if (inProgram != null)
 			_program = new Program(inProgram);
@@ -83,5 +90,5 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual{
 	public String toString() {
 		return _program.toString();
 	}
-	
+
 }

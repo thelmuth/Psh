@@ -1,2 +1,3 @@
-(6 2.3 true exec.noop)
+((float.+) ((float.+) (input.in0)) (((float.cos)) (float.cos)) (float./ ((float.+) input.in0 (float.+ float.*)) (float.exp) float./) ((float.exp) float.-) (float.-) float.-)
 100
+-3.0

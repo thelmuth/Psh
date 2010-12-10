@@ -43,6 +43,16 @@ public class PushFitnessPrediction extends PredictionGA {
 		i.SetProgram(p);
 		i.SetInterpreter(_interpreter);
 		i.SetExecutionLimit(_executionLimit);
+		
+		
+		//TODO remove
+		try {
+			i.SetProgram(new Program("(5.0)"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
@@ -56,7 +66,7 @@ public class PushFitnessPrediction extends PredictionGA {
 
 	@Override
 	protected GAIndividual ReproduceByMutation(int inIndex) {
-		PushGPIndividual i = (PushGPIndividual) ReproduceByClone(inIndex);
+		PushFitnessPredictionIndividual i = (PushFitnessPredictionIndividual) ReproduceByClone(inIndex);
 
 		int totalsize = i._program.programsize();
 		int which = NodeSelection(i);
@@ -87,8 +97,8 @@ public class PushFitnessPrediction extends PredictionGA {
 	
 	@Override
 	protected GAIndividual ReproduceByCrossover(int inIndex) {
-		PushGPIndividual a = (PushGPIndividual) ReproduceByClone(inIndex);
-		PushGPIndividual b = (PushGPIndividual) TournamentSelect(
+		PushFitnessPredictionIndividual a = (PushFitnessPredictionIndividual) ReproduceByClone(inIndex);
+		PushFitnessPredictionIndividual b = (PushFitnessPredictionIndividual) TournamentSelect(
 				_tournamentSize, inIndex);
 
 		if (a._program.programsize() <= 0) {
@@ -108,7 +118,7 @@ public class PushFitnessPrediction extends PredictionGA {
 		return a;
 	}
 
-	private int NodeSelection(PushGPIndividual inInd){
+	private int NodeSelection(PushFitnessPredictionIndividual inInd){
 		int totalSize = inInd._program.programsize();
 		int selectedNode = 0;
 		

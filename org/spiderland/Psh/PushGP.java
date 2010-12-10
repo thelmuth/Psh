@@ -337,6 +337,7 @@ abstract public class PushGP extends GA {
 
 			report += "Best mean error: " + _bestMeanFitness
 					+ "\n";
+			report += "Total: " + (_bestMeanFitness * _testCases.size()) + "\n";
 			if (_testCases.size() == _bestErrors.size()) {
 				report += "Errors: (";
 				for (int i = 0; i < _testCases.size(); i++) {
@@ -396,6 +397,7 @@ abstract public class PushGP extends GA {
 				+ _populations[_currentPopulation][_bestIndividual] + "\n";
 		}
 		report += "Mean error: " + _bestMeanFitness + "\n";
+		report += "Total error: " + (_bestMeanFitness * _testCases.size()) + "\n";
 		if (_testCases.size() == _bestErrors.size()) {
 			report += "Errors: (";
 			for (int i = 0; i < _testCases.size(); i++) {
