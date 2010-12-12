@@ -11,25 +11,41 @@ import org.spiderland.Psh.*;
 public class PushFitnessPrediction extends PredictionGA {
 	private static final long serialVersionUID = 1L;
 
-	protected int _maxPointsInProgram = 500;
+	protected int _maxPointsInProgram = 1000;
 	protected int _maxRandomCodeSize = 100;
-	protected int _executionLimit = 2000;
+	protected int _executionLimit = 10000;
 
 	String _instructionSet = "(registered.boolean registered.integer registered.float registered.exec registered.code input.makeinputs1)";
 	
 	// The prediction interpreter, which must be different from the solution
 	// interpreter
-	protected Interpreter _interpreter;
+	protected PushFitnessPredictionInterpreter _interpreter;
+	
+	protected int _errorStackIndex;
 
+	
+	//TODO remove later
+	String cheatingPredictor = "(-3 3 exec.do*range (code.dup integer.dup float.frominteger code.do* float.frominteger  (float.dup float.dup float.* float.swap -3.0 float.* float.+)  float.- float.abs error.fromfloat float.flush) float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.+ float.+ float.+ float.+ float.+ float.+ 7.0 float./)";
+	
+	
 	@Override
 	protected void InitFromParameters() throws Exception {
 
 		// Setup interpreter
-		_interpreter = new Interpreter();
+		_interpreter = new PushFitnessPredictionInterpreter();
 		_interpreter.SetInstructions(new Program(_instructionSet));
 		_interpreter.SetRandomParameters(-100, 100, 1, -100.0f, 100.0f, 0.1f,
 				_maxRandomCodeSize, _maxPointsInProgram);
 		_interpreter.setInputPusher(new InputPusher());
+
+		//TODO possibly remove later. If so, remove associated instructions
+		// Add instructions for error stack
+		_errorStackIndex = _interpreter.addCustomStack(new floatStack());
+		_interpreter.AddInstruction("error.fromfloat", new ErrorFromFloat());
+		_interpreter.AddInstruction("float.fromerror", new FloatFromError());
+
+		// Set execution limit for all PushFitnessPredictionIndividuals
+		PushFitnessPredictionIndividual.SetExecutionLimit(_executionLimit);
 
 		super.InitFromParameters();
 	}
@@ -42,16 +58,14 @@ public class PushFitnessPrediction extends PredictionGA {
 		Program p = _interpreter.RandomCode(randomCodeSize);
 		i.SetProgram(p);
 		i.SetInterpreter(_interpreter);
-		i.SetExecutionLimit(_executionLimit);
 		
-		
-		//TODO remove
-		try {
-			i.SetProgram(new Program("(5.0)"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//TODO remove: this sets the program to a predictor that should be pretty decent
+//		try {
+//			i.SetProgram(new Program(cheatingPredictor));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 
@@ -92,6 +106,14 @@ public class PushFitnessPrediction extends PredictionGA {
 		if (newsize + totalsize - oldsize <= _maxPointsInProgram)
 			i._program.ReplaceSubtree(which, newtree);
 
+		//TODO remove: this sets the program to a predictor that should be pretty decent
+//		try {
+//			i.SetProgram(new Program(cheatingPredictor));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		return i;
 	}
 	
@@ -115,6 +137,14 @@ public class PushFitnessPrediction extends PredictionGA {
 				- a._program.SubtreeSize(aindex) <= _maxPointsInProgram)
 			a._program.ReplaceSubtree(aindex, b._program.Subtree(bindex));
 
+		//TODO remove: this sets the program to a predictor that should be pretty decent
+//		try {
+//			a.SetProgram(new Program(cheatingPredictor));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		return a;
 	}
 
@@ -130,6 +160,43 @@ public class PushFitnessPrediction extends PredictionGA {
 		}
 		
 		return selectedNode;
+	}
+	
+	
+	class ErrorFromFloat extends Instruction {
+		private static final long serialVersionUID = 1L;
+
+		ErrorFromFloat() {
+		}
+
+		public void Execute(Interpreter inInterpreter) {
+			floatStack errorStack = (floatStack) inInterpreter
+					.getCustomStack(_errorStackIndex);
+			floatStack fStack = inInterpreter.floatStack();
+
+			if (fStack.size() > 0) {
+				float val = fStack.pop();
+				errorStack.push(val);
+			}
+		}
+	}
+	
+	class FloatFromError extends Instruction {
+		private static final long serialVersionUID = 1L;
+
+		FloatFromError() {
+		}
+
+		public void Execute(Interpreter inInterpreter) {
+			floatStack errorStack = (floatStack) inInterpreter
+					.getCustomStack(_errorStackIndex);
+			floatStack fStack = inInterpreter.floatStack();
+
+			if (errorStack.size() > 0) {
+				float val = errorStack.pop();
+				fStack.push(val);
+			}
+		}
 	}
 	
 }

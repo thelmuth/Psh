@@ -25,17 +25,17 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 	protected Interpreter _interpreter; // The interpreter of the
 										// PushFitnessPrediction GA
 
-	protected int _executionLimit;
+	protected static int _executionLimit;
 
 	public PushFitnessPredictionIndividual() {
 	}
 
 	public PushFitnessPredictionIndividual(Program inProgram) {
-		_program = inProgram;
+		SetProgram(inProgram);
 	}
 
 	public PushFitnessPredictionIndividual(Program inProgram, Interpreter inI) {
-		_program = inProgram;
+		SetProgram(inProgram);
 		_interpreter = inI;
 	}
 
@@ -50,8 +50,21 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 		_interpreter.codeStack().push(inputProgram);
 		_interpreter.inputStack().push(inputProgram);
 
+		//TODO remove
+//		System.out.println("Before: " + _executionLimit);
+//		System.out.println("Program: " + _program);
+//		System.out.println(_interpreter + "\n");
+		
 		// Run prediction program
 		_interpreter.Execute(_program, _executionLimit);
+		
+		
+
+//		int steppps = _interpreter.Execute(_program, _executionLimit);
+
+		//TODO remove
+//		System.out.println("After " + steppps + " steps: ");
+//		System.out.println(_interpreter + "\n\n\n");
 
 		// Predict very large fitness if there is no result on the stack.
 		if (_interpreter.floatStack().size() == 0) {
@@ -83,7 +96,7 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 		_interpreter = inI;
 	}
 
-	public void SetExecutionLimit(int inExecutionLimit) {
+	public static void SetExecutionLimit(int inExecutionLimit) {
 		_executionLimit = inExecutionLimit;
 	}
 

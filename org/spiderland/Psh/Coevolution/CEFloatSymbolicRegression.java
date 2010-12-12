@@ -41,6 +41,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 	private static final long serialVersionUID = 1L;
 
 	protected float _currentInput;
+	protected int _lastEvaluatedPopulation;
 
 	protected long _effort;
 	protected float _predictorEffortPercent;
@@ -54,6 +55,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 		super.InitFromParameters();
 
 		_effort = 0;
+		_lastEvaluatedPopulation = 0;
 
 		String cases = GetParam("test-cases", true);
 		String casesClass = GetParam("test-case-class", true);
@@ -125,7 +127,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 	protected void BeginGeneration() throws Exception {
 		//TODO Temporary solution, needs to actually use effort info
 		if(_generationCount % 2 == 1){
-			_predictorGA.Run(1);			
+			_predictorGA.Run(1);
 		}	
 	}
 	
@@ -183,8 +185,8 @@ public class CEFloatSymbolicRegression extends PushGP {
 		if(_success){
 			return true;
 		}
-		
-		GAIndividual best = _populations[_currentPopulation][_bestIndividual];
+
+		GAIndividual best = _populations[_lastEvaluatedPopulation][_bestIndividual];
 		float predictedFitness = best.GetFitness();
 		ArrayList<Float> predictedErrors = best.GetErrors();
 		
@@ -214,16 +216,6 @@ public class CEFloatSymbolicRegression extends PushGP {
 		predictorReport += "Size:";
 
 		report = report.replaceAll("Size:", predictorReport);
-		
-		/*
-		if(_populations[_currentPopulation][_bestIndividual]
-						.GetFitness() != 1000000.0f){
-			System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWW");//TODO remove
-			System.out.println(_populations[_currentPopulation][_bestIndividual]
-						.GetFitness());
-			System.exit(0);
-		}
-		*/
 		
 		return report;
 	}
@@ -310,6 +302,8 @@ protected String FinalReport() {
 				_bestErrors = i.GetErrors();
 			}
 		}
+		
+		_lastEvaluatedPopulation = _currentPopulation;
 		
 		_populationMeanFitness = totalFitness / _populations[_currentPopulation].length;	
 	}

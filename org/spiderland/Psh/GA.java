@@ -322,7 +322,7 @@ public abstract class GA implements Serializable {
 
 			EndGeneration();
 			
-			Print(Report());			
+			Print(Report());
 			
 			Checkpoint();
 

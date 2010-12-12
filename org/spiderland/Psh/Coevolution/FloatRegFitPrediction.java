@@ -50,7 +50,7 @@ public class FloatRegFitPrediction extends PredictionGA {
 
 	protected void Reproduce() {
 		int nextPopulation = _currentPopulation == 0 ? 1 : 0;
-
+		
 		for (int n = 0; n < _populations[_currentPopulation].length; n++) {
 			float method = _RNG.nextInt(100);
 			GAIndividual next;

@@ -52,22 +52,6 @@ abstract class ObjectStackInstruction extends Instruction {
 	}
 }
 
-class Quote extends Instruction {
-	private static final long serialVersionUID = 1L;
-
-	Quote() {
-	}
-
-	@Override
-	public void Execute(Interpreter inI) {
-		ObjectStack cstack = inI.codeStack();
-		ObjectStack estack = inI.execStack();
-
-		if (estack.size() > 0)
-			cstack.push(estack.pop());
-	}
-}
-
 class Pop extends StackInstruction {
 	private static final long serialVersionUID = 1L;
 
@@ -1214,6 +1198,56 @@ class InputIndex extends ObjectStackInstruction {
 //
 // Instructions for code and exec stack
 //
+
+class Quote extends Instruction {
+	private static final long serialVersionUID = 1L;
+
+	Quote() {
+	}
+
+	@Override
+	public void Execute(Interpreter inI) {
+		ObjectStack cstack = inI.codeStack();
+		ObjectStack estack = inI.execStack();
+
+		if (estack.size() > 0)
+			cstack.push(estack.pop());
+	}
+}
+
+class CodeDoStar extends Instruction {
+	private static final long serialVersionUID = 1L;
+
+	CodeDoStar() {
+	}
+
+	@Override
+	public void Execute(Interpreter inI) {
+		ObjectStack cstack = inI.codeStack();
+		ObjectStack estack = inI.execStack();
+
+		if (cstack.size() > 0)
+			estack.push(cstack.pop());
+	}
+}
+
+class CodeDo extends Instruction {
+	private static final long serialVersionUID = 1L;
+
+	CodeDo() {
+	}
+
+	@Override
+	public void Execute(Interpreter inI) {
+		ObjectStack cstack = inI.codeStack();
+		ObjectStack estack = inI.execStack();
+
+		if (cstack.size() > 0){
+			estack.push("code.pop");
+			estack.push(cstack.top());
+		}
+	}
+}
 
 // trh//All code and exec stack iteration fuctions have been fixed to match the
 // specifications of Push 3.0

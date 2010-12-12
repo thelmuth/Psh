@@ -133,6 +133,8 @@ public class Interpreter implements Serializable {
 		DefineInstruction("boolean.rand", new BoolRand());
 
 		DefineInstruction("code.quote", new Quote());
+		DefineInstruction("code.do", new CodeDo());
+		DefineInstruction("code.do*", new CodeDoStar());
 		DefineInstruction("code.fromboolean", new CodeFromBoolean());
 		DefineInstruction("code.frominteger", new CodeFromInteger());
 		DefineInstruction("code.fromfloat", new CodeFromFloat());
@@ -388,6 +390,7 @@ public class Interpreter implements Serializable {
 
 	public int Step(int inMaxSteps) {
 		int executed = 0;
+			
 		while (inMaxSteps != 0 && _execStack.size() > 0) {			
 			ExecuteInstruction(_execStack.pop());
 			inMaxSteps--;

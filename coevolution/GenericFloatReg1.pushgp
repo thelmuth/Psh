@@ -54,7 +54,7 @@ problem-class = org.spiderland.Psh.Coevolution.CEFloatSymbolicRegression
 test-cases = ((-3 18) (-2 10) (-1 4) (0 0) (1 -2) (2 -2) (3 0))
 
 #instruction-set = (registered.float input.makeinputs1)
-instruction-set = (input.makeinputs1 float.+ float.- float.* float./ float.exp float.sin float.cos)
+instruction-set = (float.+ float.- float.* float.neg float.dup float.swap)
 
 ### Setup predictor GP parameters
 
