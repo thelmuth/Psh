@@ -1,3 +1,2 @@
-(code.pop code.quote ((float.+) ((float.* (float./) float.+))) -3 3 exec.do*range (code.dup integer.dup float.frominteger code.do* float.frominteger  (float.dup float.dup float.* float.swap -3.0 float.* float.+)  float.- float.abs error.fromfloat) float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.+ float.+ float.+ float.+ float.+ float.+ 7.0 float./)
+(code.quote (5 6 7 integer.+ (integer.*) (144 integer.-)) code.size)
 1000
-

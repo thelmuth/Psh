@@ -10,20 +10,19 @@ code.cons
 code.container
 code.contains
 code.discrepancy
-code.do
-code.do*
 code.extract
-code.fromname
 code.insert
-code.length
 code.list
 code.member
 code.nth
 code.nthcdr
 code.null
-code.position
-code.size
+code.position  -  this and contains seem to be in opposite order of whether first contains second
 code.subst
+
+Not described in Push 3.0
+-------------------------
+code.count - number of times the first item on the code stack appears in the second item of the code stack
 
 
 Missing Instructions
@@ -33,6 +32,7 @@ boolean.define
 code.define
 code.definition
 code.instructions
+code.fromname
 
 exec.define
 

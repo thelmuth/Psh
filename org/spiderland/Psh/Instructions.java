@@ -1249,6 +1249,54 @@ class CodeDo extends Instruction {
 	}
 }
 
+class CodeSize extends Instruction {
+	private static final long serialVersionUID = 1L;
+
+	CodeSize() {
+	}
+
+	@Override
+	public void Execute(Interpreter inI) {
+		ObjectStack cstack = inI.codeStack();
+		intStack iStack = inI.intStack();
+
+		if (cstack.size() > 0){
+			Object top = cstack.pop();
+			if(top instanceof Program){
+				iStack.push(((Program) top).programsize());
+			}
+			else {
+				iStack.push(1);
+			}
+		}
+	}
+}
+
+class CodeLength extends Instruction {
+	private static final long serialVersionUID = 1L;
+
+	CodeLength() {
+	}
+
+	@Override
+	public void Execute(Interpreter inI) {
+		ObjectStack cstack = inI.codeStack();
+		intStack iStack = inI.intStack();
+
+		if (cstack.size() > 0){
+			Object top = cstack.pop();
+			if(top instanceof Program){
+				iStack.push(((Program) top)._size);
+			}
+			else {
+				iStack.push(1);
+			}
+		}
+	}
+}
+
+
+
 // trh//All code and exec stack iteration fuctions have been fixed to match the
 // specifications of Push 3.0
 

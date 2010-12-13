@@ -99,6 +99,8 @@ exec.yank
 exec.yankdup
 
 code.=
+code.do
+code.do*
 code.do*count
 code.do*range
 code.do*times
@@ -108,12 +110,14 @@ code.fromboolean
 code.fromfloat
 code.frominteger
 code.if
+code.length
 code.noop
 code.pop
 code.quote
 code.rand
 code.rot
 code.shove
+code.size
 code.stackdepth
 code.swap
 code.yank

@@ -135,6 +135,8 @@ public class Interpreter implements Serializable {
 		DefineInstruction("code.quote", new Quote());
 		DefineInstruction("code.do", new CodeDo());
 		DefineInstruction("code.do*", new CodeDoStar());
+		DefineInstruction("code.size", new CodeSize());
+		DefineInstruction("code.length", new CodeLength());
 		DefineInstruction("code.fromboolean", new CodeFromBoolean());
 		DefineInstruction("code.frominteger", new CodeFromInteger());
 		DefineInstruction("code.fromfloat", new CodeFromFloat());
