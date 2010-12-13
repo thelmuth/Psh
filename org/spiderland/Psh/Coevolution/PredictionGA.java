@@ -75,7 +75,7 @@ public abstract class PredictionGA extends GA {
 		_trainerPopulationSize = (int) GetFloatParam("trainer-population-size");
 
 		InitTrainerPopulation();
-		
+
 		super.InitFromParameters();
 	}
 
@@ -281,7 +281,7 @@ public abstract class PredictionGA extends GA {
 		// The following code prints all of the predictors.
 		
 		report += ";;--------------------------------------------------------;;\n\n";
-		report += "\n\nPredictors:\n";
+		report += "Predictors:\n";
 		for (int i = 0; i < _populations[_currentPopulation].length; i++) {
 			GAIndividual predictor = _populations[_currentPopulation][i];
 
@@ -295,7 +295,7 @@ public abstract class PredictionGA extends GA {
 		// The following code prints all of the trainers.
 		
 		report += ";;--------------------------------------------------------;;\n\n";
-		report += "\n\nTrainers:\n\n";
+		report += "Trainers:\n\n";
 		for(PushGPIndividual ind : _trainerPopulation){
 			report += ind + "\n";
 			report += "   actual trainer fitness (not predicted) = " + ind.GetFitness() + "\n";
@@ -312,7 +312,7 @@ public abstract class PredictionGA extends GA {
 		return "";
 	}
 	
-	private Float Variance(ArrayList<Float> list) {
+	protected Float Variance(ArrayList<Float> list) {
 		float sampleMean = SampleMean(list);
 		float sum = 0;
 		

@@ -23,7 +23,6 @@ public class PushFitnessPrediction extends PredictionGA {
 	
 	protected int _errorStackIndex;
 
-	
 	//TODO remove later
 	String cheatingPredictor = "(-3 3 exec.do*range (code.dup integer.dup float.frominteger code.do* float.frominteger  (float.dup float.dup float.* float.swap -3.0 float.* float.+)  float.- float.abs error.fromfloat float.flush) float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.fromerror float.+ float.+ float.+ float.+ float.+ float.+ 7.0 float./)";
 	

@@ -220,7 +220,7 @@ public abstract class GA implements Serializable {
 			individualClass = defaultIndividualClass;
 		}
 		_individualClass = Class.forName(individualClass);
-
+		
 		_mutationPercent = GetFloatParam("mutation-percent");
 		_crossoverPercent = GetFloatParam("crossover-percent");
 		_maxGenerations = (int) GetFloatParam("max-generations");
@@ -274,7 +274,7 @@ public abstract class GA implements Serializable {
 		_populations = new GAIndividual[2][inSize];
 		_currentPopulation = 0;
 		_generationCount = 0;
-
+		
 		Object iObject = _individualClass.newInstance();
 
 		if (!(iObject instanceof GAIndividual))

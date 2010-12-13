@@ -43,7 +43,6 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 	public float PredictSolutionFitness(PushGPIndividual pgpIndividual) {
 		// TODO test this once everything else is up and running
 
-		System.out.println("GGGGGGGGGGGGGGGGGG");
 		_interpreter.ClearStacks();
 
 		// Set input
