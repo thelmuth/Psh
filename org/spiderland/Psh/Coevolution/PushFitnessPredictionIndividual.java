@@ -43,6 +43,7 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 	public float PredictSolutionFitness(PushGPIndividual pgpIndividual) {
 		// TODO test this once everything else is up and running
 
+		System.out.println("GGGGGGGGGGGGGGGGGG");
 		_interpreter.ClearStacks();
 
 		// Set input
@@ -68,7 +69,7 @@ public class PushFitnessPredictionIndividual extends PredictionGAIndividual {
 
 		// Predict very large fitness if there is no result on the stack.
 		if (_interpreter.floatStack().size() == 0) {
-			return 1000000;
+			return 1000000000;
 		}
 		
 		// Get result

@@ -121,7 +121,7 @@ public abstract class PredictionGA extends GA {
 	 * population. The solution individual is chosen with the highest variance
 	 * of the predictions from the current predictor population.
 	 */
-	protected PushGPIndividual ChooseNewTrainer() {
+	public PushGPIndividual ChooseNewTrainer() {
 		ArrayList<Float> individualVariances = new ArrayList<Float>();
 		
 		for (int i = 0; i < _solutionGA.GetPopulationSize(); i++) {
@@ -152,7 +152,7 @@ public abstract class PredictionGA extends GA {
 				.GetIndividualFromPopulation(highestVarianceIndividual);
 	}
 
-	protected PredictionGAIndividual GetBestPredictor(){
+	public PredictionGAIndividual GetBestPredictor(){
 		float bestFitness = Float.MAX_VALUE;
 		GAIndividual bestPredictor = _populations[_currentPopulation][0];
 		
@@ -184,7 +184,7 @@ public abstract class PredictionGA extends GA {
 	 * This must be private, since there must be a _solutionGA set before this
 	 * method is invoked. Use SetGAandTrainers() instead.
 	 */
-	private void InitTrainerPopulation() {
+	protected void InitTrainerPopulation() {
 		_trainerPopulation = new ArrayList<PushGPIndividual>();
 
 		PushGPIndividual individual = new PushGPIndividual();
@@ -206,7 +206,7 @@ public abstract class PredictionGA extends GA {
 	protected void EvaluateIndividual(GAIndividual inIndividual) {
 		ArrayList<Float> errors = new ArrayList<Float>();
 		
-		for (int i = 0; i < _trainerPopulationSize; i++) {
+		for (int i = 0; i < _trainerPopulation.size(); i++) {
 			float error = EvaluateTestCase(inIndividual, _trainerPopulation
 					.get(i), _trainerPopulation.get(i).GetFitness());
 			errors.add(error);
@@ -279,7 +279,7 @@ public abstract class PredictionGA extends GA {
 		report += "Mean predictor fitness: " + _populationMeanFitness + "\n";
 				
 		// The following code prints all of the predictors.
-		/*
+		
 		report += ";;--------------------------------------------------------;;\n\n";
 		report += "\n\nPredictors:\n";
 		for (int i = 0; i < _populations[_currentPopulation].length; i++) {
@@ -290,10 +290,10 @@ public abstract class PredictionGA extends GA {
 			report += "   predictor fitness = " + predictor.GetFitness() + "\n";
 			report += "   errors = " + predictor.GetErrors() + "\n\n";
 		}
-		*/
+		
 
 		// The following code prints all of the trainers.
-		/*
+		
 		report += ";;--------------------------------------------------------;;\n\n";
 		report += "\n\nTrainers:\n\n";
 		for(PushGPIndividual ind : _trainerPopulation){
@@ -301,7 +301,7 @@ public abstract class PredictionGA extends GA {
 			report += "   actual trainer fitness (not predicted) = " + ind.GetFitness() + "\n";
 			report += "   errors = " + ind.GetErrors() + "\n\n";
 		}
-		*/
+		
 		
 		report += ";;########################################################;;\n\n";
 		

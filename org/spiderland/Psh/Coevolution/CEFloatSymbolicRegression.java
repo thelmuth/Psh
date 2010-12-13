@@ -127,7 +127,7 @@ public class CEFloatSymbolicRegression extends PushGP {
 	protected void BeginGeneration() throws Exception {
 		//TODO Temporary solution, needs to actually use effort info
 		if(_generationCount % 2 == 1){
-			_predictorGA.Run(1);
+			_predictorGA.RunGeneration();
 		}	
 	}
 	

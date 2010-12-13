@@ -73,7 +73,7 @@ public class PushFitnessPrediction extends PredictionGA {
 	protected void EvaluateTrainerFitnesses() {
 		for(PushGPIndividual trainer : _trainerPopulation){
 			if(!trainer.FitnessIsSet()){
-				EvaluateSolutionIndividual(trainer);
+				trainer.SetFitness(50);
 			}	
 		}
 	}
