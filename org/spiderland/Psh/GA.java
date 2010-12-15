@@ -604,6 +604,10 @@ public abstract class GA implements Serializable {
 
 	abstract protected void InitIndividual(GAIndividual inIndividual);
 
+	/**
+	 * Determines and sets a GAIndividual's fitness and errors.
+	 * @param inIndividual
+	 */
 	abstract protected void EvaluateIndividual(GAIndividual inIndividual);
 
 	abstract public float EvaluateTestCase(GAIndividual inIndividual,

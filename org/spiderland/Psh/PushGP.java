@@ -389,12 +389,11 @@ abstract public class PushGP extends GA {
 				_finalSimplifications);
 
 		if (Success()) {
-		report += "Successful program: "
-				+ _populations[_currentPopulation][_bestIndividual] + "\n";
-		}
-		else {
-		report += "Best failed program: "
-				+ _populations[_currentPopulation][_bestIndividual] + "\n";
+			report += "Successful program: "
+					+ _populations[_currentPopulation][_bestIndividual] + "\n";
+		} else {
+			report += "Best failed program: "
+					+ _populations[_currentPopulation][_bestIndividual] + "\n";
 		}
 		report += "Mean error: " + _bestMeanFitness + "\n";
 		report += "Total error: " + (_bestMeanFitness * _testCases.size()) + "\n";
