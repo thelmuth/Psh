@@ -21,8 +21,12 @@
 #
 
 ### Setup experimental parameters
-runs = 2
-output-file = nodeexperimentresults.txt
+runs = 20
+output-directory = zzzzzTESTING/tests
+output-file-prefix = schneau
+output-file-suffix = .txt
+
+#output-file = nodeexperimentresults.txt
 #verbose = false
 
 ### Setup required parameters

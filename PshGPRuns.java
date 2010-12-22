@@ -15,6 +15,7 @@
  */
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.spiderland.Psh.*;
 
@@ -30,29 +31,48 @@ public class PshGPRuns {
 			System.exit(0);
 		}
 
-		GA ga = null;
-		int runs = 1;
-		boolean verbose = true;
+		GA ga;
+		
+		// Fetch parameters important to PshGPRuns
+		HashMap<String, String> tempParams = Params.ReadFromFile(new File(args[0]));
+		tempParams.put("verbose", "false");
+		GA tempGA = GA.GAWithParameters(tempParams);
+		
+		int runs = (int) tempGA.GetFloatParam("runs");
+		boolean verbose = tempGA._verbose;
+		
+		String outputDirectory = tempGA.GetParam("output-directory");
+		String outputFilePrefix = tempGA.GetParam("output-file-prefix");
+		String outputFileSuffix = tempGA.GetParam("output-file-suffix");
+
+		if(outputDirectory.charAt(outputDirectory.length() - 1) != '/'){
+			outputDirectory += '/';
+		}
+		File parentDirectory = new File(outputDirectory);
+		parentDirectory.mkdirs();
+		
+
+		System.out.println("\n\n+++++++++++++++ Beginning PushGPRuns +++++++++++++++\n");
 		
 		for(int i = 0; i < runs; i++){
-			ga = GA.GAWithParameters(Params.ReadFromFile(new File(args[0])));
-			
-			if (i == 0) {
-				runs = (int) ga.GetFloatParam("runs");
-				verbose = ga._verbose;
-				System.out.println("\n\n++++++++++ Beginning PushGPRuns for " + runs
-						+ " runs ++++++++++\n\n");
-				if(runs < 1)
-					break;
-			}
-			
 			System.out.println("==========     Beginning run " + i
 					+ "      ==========");
 			if (!verbose) {
 				System.out
 						.println("========== Each \".\" is a generation ==========");
 			}
+			System.out.println();
 
+			// Create output file string
+			String outputFileString = outputDirectory + outputFilePrefix + i
+					+ outputFileSuffix;
+
+			// Setup GA
+			HashMap<String, String> params = Params.ReadFromFile(new File(args[0]));
+			params.put("output-file", outputFileString);
+			ga = GA.GAWithParameters(params);
+
+			// Run GA
 			ga.Run();
 		}
 		

@@ -123,6 +123,10 @@ The following parameters are optional. If not specified, the default values belo
 	node-selection-leaf-probability = 10  (only used if node-selection-mode = leaf-probability)
 	node-selection-tournament-size = 2  (only used if node-selection-mode = size-tournament)
     
+    survival-selection-mode = none (others available are truncation and decimation)
+	survival-ratio = 10 (only if survival-selection-mode = truncation or decimation)
+	survival-tournament-size = 2 (only if survival-selection-mode = decimation)
+    
     min-random-integer = -10
     max-random-integer = 10
     random-integer-resolution = 1
@@ -178,6 +182,7 @@ Major Changes since v1.0:
 - Added optional parameter `target-function-string`, which specifies a human-readable version of the target function, which is only used in I/O.
 - Added many instructions that were missing from the Push 3.0 specification.
 - Added node-selection-mode as an optional parameter, as well as node size tournaments for node selection.
+- Added survival-selection-mode as an optional parameter with options of none, truncation, and decimation. Truncation and decimation both use an optional parameter survival-ratio, and decimation uses another optional parameter survival-tournament-size.
 
 Major Changes since v0.3:
 -------------------------

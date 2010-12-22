@@ -28,43 +28,48 @@ import java.util.zip.GZIPOutputStream;
 public abstract class GA implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	protected GAIndividual _populations[][];
-	protected int _currentPopulation;
-	protected int _generationCount;
-
-	protected float _mutationPercent;
-	protected float _crossoverPercent;
-
-	protected float _bestMeanFitness;
-	protected double _populationMeanFitness;
-	protected int _bestIndividual;
-
-	protected ArrayList<Float> _bestErrors;
-
-	protected int _maxGenerations;
-	protected int _tournamentSize;
-	protected int _trivialGeographyRadius;
-
-	protected Random _RNG;
-
 	protected HashMap<String, String> _parameters;
 	public ArrayList<GATestCase> _testCases;
 
 	protected Class<?> _individualClass;
 
+	protected Random _RNG;
+	
+	protected GAIndividual _populations[][];
+	protected int _currentPopulation;
+	
+	protected int _generationCount;
+	protected int _maxGenerations;
+
+	protected float _mutationPercent;
+	protected float _crossoverPercent;
+
+	protected int _tournamentSize;
+	protected int _trivialGeographyRadius;
+
+	protected String _survivalSelectionMode;
+	protected float _survivalRatio;
+	protected int _survivalPopulationSize;
+	protected int _decimationTournamentSize;
+
 	protected transient OutputStream _outputStream;
 	boolean _alsoPrintToOutput;
+	public boolean _verbose;
 
 	protected Checkpoint _checkpoint;
 	protected String _checkpointPrefix;
 	protected String _outputfile;
-	public boolean _verbose;
+	
+	protected float _bestMeanFitness;
+	protected ArrayList<Float> _bestErrors;
+	protected double _populationMeanFitness;
+	protected int _bestIndividual; //TODO make sure this is maintained
+
 
 	/**
 	 * Factor method for creating a GA object, with the GA class specified by
 	 * the problem-class parameter.
 	 */
-
 	public static GA GAWithParameters(HashMap<String, String> inParams)
 			throws Exception {
 		
@@ -214,13 +219,44 @@ public abstract class GA implements Serializable {
 		int defaultTrivialGeographyRadius = 0;
 		String defaultIndividualClass = "org.spiderland.Psh.PushGPIndividual";
 		boolean defaultVerbose = true;
+		String defaultSurvivalSelectionMode = "none";
+		float defaultSurvivalRatio = 10;
+		int defaultDecimationTournamentSize = 2;
 		
 		String individualClass = GetParam("individual-class", true);
 		if(individualClass == null){
 			individualClass = defaultIndividualClass;
 		}
 		_individualClass = Class.forName(individualClass);
-		
+
+		_survivalSelectionMode = GetParam("survival-selection-mode", true);
+		if (_survivalSelectionMode == null) {
+			_survivalSelectionMode = defaultSurvivalSelectionMode;
+			_survivalPopulationSize = (int) GetFloatParam("population-size");
+		} else {
+			if (!_survivalSelectionMode.equals("none")
+					&& !_survivalSelectionMode.equals("decimation")
+					&& !_survivalSelectionMode.equals("truncation")){
+				throw new Exception(
+						"survival-selection-mode must be set to none,\n"
+								+ "truncation, or decimation. Currently set to "
+								+ _survivalSelectionMode + ".");
+			}
+			
+			_survivalRatio = GetFloatParam("survival-ratio", true);
+			if (Float.isNaN(_survivalRatio)) {
+				_survivalRatio = defaultSurvivalRatio;
+			}
+
+			_survivalPopulationSize = (int) ((_survivalRatio * GetFloatParam("population-size")) / 100.0);
+
+			_decimationTournamentSize = (int) GetFloatParam("survival-tournament-size", true);
+			if (Float.isNaN(GetFloatParam("survival-tournament-size", true))) {
+				_decimationTournamentSize = defaultDecimationTournamentSize;
+			}
+			
+		}
+
 		_mutationPercent = GetFloatParam("mutation-percent");
 		_crossoverPercent = GetFloatParam("crossover-percent");
 		_maxGenerations = (int) GetFloatParam("max-generations");
@@ -256,7 +292,14 @@ public abstract class GA implements Serializable {
 
 		_outputfile = GetParam("output-file", true);
 		if (_outputfile != null){
-			_outputStream = new FileOutputStream(new File(_outputfile), true);
+			File outputFile = new File(_outputfile);
+			if (outputFile.exists()) {
+				throw new Exception(
+						"A file already exists at output-file location \""
+								+ _outputfile + "\".");
+			}
+			
+			_outputStream = new FileOutputStream(outputFile);
 			_alsoPrintToOutput = true;
 		}
 		
@@ -318,6 +361,7 @@ public abstract class GA implements Serializable {
 			BeginGeneration();
 			
 			Evaluate();
+			SurvivalSelection();
 			Reproduce();
 
 			EndGeneration();
@@ -325,7 +369,6 @@ public abstract class GA implements Serializable {
 			Print(Report());
 			
 			Checkpoint();
-
 			System.gc();
 			
 			_currentPopulation = (_currentPopulation == 0 ? 1 : 0);
@@ -385,6 +428,164 @@ public abstract class GA implements Serializable {
 		}
 		
 		_populationMeanFitness = totalFitness / _populations[_currentPopulation].length;
+	}
+
+	/**
+	 * Implements the survival selection mode given as a parameter. By default,
+	 * no survival selection is used, meaning all individuals have a chance to
+	 * reproduce.
+	 * 
+	 * If truncation survival selection is used, only the top "survival-ratio"
+	 * percent of the population survive to reproduce. survival-ratio is a
+	 * parameter set by the user.
+	 * 
+	 * If decimation survival selection is used, survival-ratio * population
+	 * size individuals survive to reproduce, but these individuals are chosen
+	 * in a different manner than in truncation survival. Here, a series of
+	 * tournaments of size survival-tournament-size are conducted, where the
+	 * participant with the least fitness is removed from the population (does
+	 * not survive). These tournaments are conducted until the remaining
+	 * population is survival-ratio percent of the total population.
+	 * 
+	 * Instead of removing individuals from the population who don't survive,
+	 * the surviving population instead will be moved to the lowest
+	 * _survivalPopulationSize indices in the population, which will be the only
+	 * portion of the population chosen from for reproduction.
+	 */
+	protected void SurvivalSelection() throws Exception {
+		// TODO Auto-generated method stub
+
+		if (_survivalSelectionMode.equals("none")) {
+			return;
+		} else if (_survivalSelectionMode.equals("truncation")) {
+			TruncationSelection();
+		} else if (_survivalSelectionMode.equals("decimation")) {
+			DecimationSelection();
+		} else {
+			throw new Exception(
+					"Unrecognized value for _survivalSelectionMode: "
+							+ _survivalSelectionMode);
+		}
+		
+	}
+
+	/**
+	 * Moves best _survivalPopulationSize individuals into beginning of the
+	 * population array.
+	 */
+	protected void TruncationSelection() {
+		
+		for(int i = 0; i < _survivalPopulationSize; i++){
+			int bestRemainingIndividual = GetBestIndividualAfterIndex(i);
+			
+			// Swap i and bestRemainingIndividual
+			GAIndividual swaptemp = _populations[_currentPopulation][i];
+			_populations[_currentPopulation][i] = _populations[_currentPopulation][bestRemainingIndividual];
+			_populations[_currentPopulation][bestRemainingIndividual] = swaptemp;
+			
+			// Check if best individual has been moved
+			if(_bestIndividual == bestRemainingIndividual){
+				_bestIndividual = i;
+			} else if(_bestIndividual == i){
+				_bestIndividual = bestRemainingIndividual;
+			}
+		}
+		
+	}
+
+	/**
+	 * Returns best fitness (lowest error) individual after or at the parameter
+	 * inIndex.
+	 */
+	private int GetBestIndividualAfterIndex(int inIndex) {
+		int bestIndex = inIndex;
+		float bestFitness = _populations[_currentPopulation][inIndex]
+				.GetFitness();
+		
+		for (int j = inIndex; j < _populations[_currentPopulation].length; j++) {
+			if (_populations[_currentPopulation][j].GetFitness() < bestFitness) {
+				bestIndex = j;
+				bestFitness = _populations[_currentPopulation][j].GetFitness();
+			}
+		}
+		
+		return bestIndex;
+	}
+
+	/**
+	 * Moves a _survivalPopulationSize number of individuals into beginning of
+	 * the population array, based on a loser tournament selection.
+	 */
+	protected void DecimationSelection() {
+		// TODO Auto-generated method stub
+
+		// Loop from last index in population to the one just after
+		// _survivalPopulationSize, using tournaments of size
+		// _decimationTournamentSize. Each iteration, move the loser of the
+		// tournament to the current index.
+		for (int i = _populations[_currentPopulation].length - 1;
+			 i >= _survivalPopulationSize; i--) {
+			
+			int tourneyLoser = GetTourneyLoser(i);
+			
+			// Swap i and tourneyLoser
+			GAIndividual swaptemp = _populations[_currentPopulation][i];
+			_populations[_currentPopulation][i] = _populations[_currentPopulation][tourneyLoser];
+			_populations[_currentPopulation][tourneyLoser] = swaptemp;
+			
+			// Check if best individual has been moved
+			// NB: Although unlikely, this could happen if many individuals
+			// tie for the best fitness
+			if(_bestIndividual == tourneyLoser){
+				_bestIndividual = i;
+			} else if(_bestIndividual == i){
+				_bestIndividual = tourneyLoser;
+			}			
+		}
+
+	}
+
+	private int GetTourneyLoser(int inIndex) {
+		// TODO Auto-generated method stub
+	
+		int worstIndex = -1;
+		float worstFitness = -1;
+		
+
+		for (int j = inIndex; j < _populations[_currentPopulation].length; j++) {
+			int selectedIndividual = -1;
+			
+			if(_trivialGeographyRadius > 0) {
+				// Trivial geography
+				//TODO implement and remove next line
+				selectedIndividual = _RNG.nextInt(inIndex + 1);
+				
+			} else {
+				selectedIndividual = _RNG.nextInt(inIndex + 1);
+			}
+			
+			if (_populations[_currentPopulation][selectedIndividual]
+					.GetFitness() > worstFitness) {
+				worstIndex = selectedIndividual;
+				worstFitness = _populations[_currentPopulation][selectedIndividual]
+						.GetFitness();
+			}
+		
+		}
+		
+		//TODO implement trivial geography as below
+//		if (_trivialGeographyRadius > 0) {
+//			int index = (_RNG.nextInt(_trivialGeographyRadius * 2) - _trivialGeographyRadius)
+//					+ inIndex;
+//			if (index < 0)
+//				index += inPopsize;
+//
+//			return (index % inPopsize);
+//		} else {
+//			return _RNG.nextInt(inPopsize);
+//		}
+		
+		return worstIndex;
 	}
 
 	/**
@@ -477,13 +678,12 @@ public abstract class GA implements Serializable {
 	 */
 
 	protected GAIndividual TournamentSelect(int inSize, int inIndex) {
-		int popsize = _populations[_currentPopulation].length;
 
-		int best = TournamentSelectionIndex(inIndex, popsize);
+		int best = TournamentSelectionIndex(inIndex, _survivalPopulationSize);
 		float bestFitness = _populations[_currentPopulation][best].GetFitness();
 
 		for (int n = 0; n < inSize - 1; n++) {
-			int candidate = TournamentSelectionIndex(inIndex, popsize);
+			int candidate = TournamentSelectionIndex(inIndex, _survivalPopulationSize);
 			float candidateFitness = _populations[_currentPopulation][candidate]
 					.GetFitness();
 
