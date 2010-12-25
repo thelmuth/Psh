@@ -29,13 +29,12 @@ tournament-size = 7
 mutation-percent = 5
 crossover-percent = 85
 
+
 ### Setup GA parameters
 bitstring-size = 50
 lambda = 0.5
 
+
 ### Setup Optional Parameters
 
-
-
-#trivial-geography-radius = 10
 

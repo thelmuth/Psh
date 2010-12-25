@@ -35,11 +35,11 @@ public class PshGPRuns {
 		
 		// Fetch parameters important to PshGPRuns
 		HashMap<String, String> tempParams = Params.ReadFromFile(new File(args[0]));
+		boolean verbose = !"false".equals(tempParams.get("verbose")); //Set verbose
 		tempParams.put("verbose", "false");
 		GA tempGA = GA.GAWithParameters(tempParams);
 		
 		int runs = (int) tempGA.GetFloatParam("runs");
-		boolean verbose = tempGA._verbose;
 		
 		String outputDirectory = tempGA.GetParam("output-directory");
 		String outputFilePrefix = tempGA.GetParam("output-file-prefix");

@@ -1,11 +1,12 @@
 import os
 
-outputDirectory = "zzzzzTESTING/tests"
-outputFilePrefix = "schneau"
+outputDirectory = "../GAExperiments/decimation2/ssmNONE/sts2sr10runs2000"
+outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
-path= "../" + outputDirectory + "/"
-dirList = os.listdir(path)
+if outputDirectory[-1] != '/':
+    outputDirectory += '/'
+dirList = os.listdir(outputDirectory)
 
 print "Run terminations:\n"
 
@@ -18,6 +19,7 @@ while (outputFilePrefix + str(i) + outputFileSuffix) in dirList:
     for line in f:
         if ("SUCCESS" in line) or ("FAILURE" in line):
             print line[0:-1]
+            
             gen = int(line.split("generation ")[-1])
             totalGen += gen
 
