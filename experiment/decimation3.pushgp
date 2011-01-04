@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 1000
-output-directory = GAExperiments/decimation3/ssmNONE/pop2000gen401runs1000
+output-directory = GAExperiments/decimation3/ssmDECIMATION/pop2000gen401runs1000
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -45,7 +45,7 @@ bitstring-size = 40
 ### Setup Optional Parameters
 
 #options: none, decimation, truncation
-survival-selection-mode = none
+survival-selection-mode = decimation
 survival-ratio = 10
 survival-tournament-size = 2
 

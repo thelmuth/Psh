@@ -46,7 +46,7 @@ lambda = 0.5
 ### Setup Optional Parameters
 
 #options: none, decimation, truncation
-survival-selection-mode = truncation
+survival-selection-mode = decimation
 survival-ratio = 10
 survival-tournament-size = 2
 

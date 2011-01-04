@@ -1,6 +1,6 @@
 import os
 
-outputDirectory = "../GAExperiments/decimation2/ssmNONE/sts2sr10runs2000"
+outputDirectory = "../GAExperiments/decimation3/ssmNONE/pop2000gen401runs1000"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
@@ -14,7 +14,7 @@ i = 0
 totalGen = 0
 while (outputFilePrefix + str(i) + outputFileSuffix) in dirList:
     fileName = (outputFilePrefix + str(i) + outputFileSuffix)
-    f = open(path + fileName)
+    f = open(outputDirectory + fileName)
 
     for line in f:
         if ("SUCCESS" in line) or ("FAILURE" in line):
