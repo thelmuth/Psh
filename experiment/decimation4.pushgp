@@ -1,0 +1,51 @@
+# Copyright 2009-2010 Jon Klein
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+#
+# Tom Helmuth
+# 1/3/2011
+#
+
+### Setup experimental parameters
+runs = 1000
+output-directory = GAExperiments/decimation4/ssmDECIMATION/pop2000gen301runs1000
+output-file-prefix = run
+output-file-suffix = .txt
+
+
+### Setup required parameters
+
+problem-class = org.spiderland.Psh.BitstringGA.Decimation4
+individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
+
+population-size = 2000
+max-generations = 301
+
+tournament-size = 2
+mutation-percent = 10
+crossover-percent = 85
+
+
+### Setup GA parameters
+bitstring-size = 40
+
+
+### Setup Optional Parameters
+
+#options: none, decimation, truncation
+survival-selection-mode = none
+survival-ratio = 10
+survival-tournament-size = 2
+
