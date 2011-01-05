@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.spiderland.Psh.GAIndividual;
 
-public class Decimation3 extends BitstringGA {
+public class Decimation5 extends BitstringGA {
 	private static final long serialVersionUID = 1L;
 	
 	protected void InitFromParameters() throws Exception {
@@ -13,20 +13,25 @@ public class Decimation3 extends BitstringGA {
 	}
 
 	/**
-	 * Fitness = (# of non-transitions)
-	 * where a transition is a 0 bit next to a 1 bit (in either order)
-	 * NB: Lower is better, so best solution is 1010101010...
+	 * "Deb's Deceptive 4-bit Function"
+	 * There are _size / 4 sub-functions, where each one is the following:
+	 * 		if all 4 bits are 1s: 0
+	 *		else : 1 + [number of 1s]
+	 *	where trying to minimize fitness to 0 with all 1s.
 	 */
 	@Override
 	protected void EvaluateIndividual(GAIndividual inIndividual) {
 		BitstringGAIndividual ind = (BitstringGAIndividual) inIndividual;
 
-		float fitness = 0;
+		//TODO: implement this
+		float fitness = _size - 1;
+		boolean prevBit = ind._bits.get(0);
 		
 		for (int i = 1; i < _size; i++) {
-			if (ind._bits.get(i) == ind._bits.get(i - 1)) {
-				fitness++;
+			if (ind._bits.get(i) != prevBit) {
+				fitness -= 1;
 			}
+			prevBit = ind._bits.get(i);
 		}
 		
 		ArrayList<Float> errors = new ArrayList<Float>();

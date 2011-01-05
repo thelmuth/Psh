@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.spiderland.Psh.GAIndividual;
 
-public class Decimation3 extends BitstringGA {
+public class Decimation4 extends BitstringGA {
 	private static final long serialVersionUID = 1L;
 	
 	protected void InitFromParameters() throws Exception {
@@ -13,9 +13,9 @@ public class Decimation3 extends BitstringGA {
 	}
 
 	/**
-	 * Fitness = (# of non-transitions)
+	 * Fitness = # of transitions
 	 * where a transition is a 0 bit next to a 1 bit (in either order)
-	 * NB: Lower is better, so best solution is 1010101010...
+	 * NB: Lower is better, so best solution is all 1s or all 0s
 	 */
 	@Override
 	protected void EvaluateIndividual(GAIndividual inIndividual) {
@@ -24,7 +24,7 @@ public class Decimation3 extends BitstringGA {
 		float fitness = 0;
 		
 		for (int i = 1; i < _size; i++) {
-			if (ind._bits.get(i) == ind._bits.get(i - 1)) {
+			if (ind._bits.get(i) != ind._bits.get(i - 1)) {
 				fitness++;
 			}
 		}

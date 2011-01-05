@@ -56,7 +56,7 @@ target-function-string = y = 12x^2 + 5
 ### Setup optional parameters having to do with node selection and replacement
 
 #Options: unbiased, leaf-probability, size-tournament
-node-selection-mode = leaf-probability
+node-selection-mode = unbiased
 node-selection-leaf-probability = 10
 node-selection-tournament-size = 6
 
