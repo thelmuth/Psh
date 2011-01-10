@@ -3,11 +3,11 @@ import os
 import sys
 
 # Set these before running:
-outputDirectory = "../GAExperiments/decimation3/ssmNONE/pop2000gen401runs1000"
+outputDirectory = "../GAExperiments/decimation4NoXover/sts2ts1/ssmDECIMATION/pop400gen1001runs1000"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
-population_size = 500
+population_size = 400
 max_generations = 1001
 z = 0.99
 
@@ -82,3 +82,4 @@ while (outputFilePrefix + str(i) + outputFileSuffix) in dirList:
 
 print
 print "Computational Effort =", computational_effort(success_generations, runs, population_size, max_generations, z)
+
