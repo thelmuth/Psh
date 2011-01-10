@@ -3,7 +3,7 @@ import os
 import sys
 
 # Set these before running:
-outputDirectory = "../GAExperiments/decimation4NoXover/sts2ts1/ssmDECIMATION/pop400gen1001runs1000"
+outputDirectory = "../GAExperiments/decimation3/ssmTRUNCATION/pop2000gen401runs1000"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 

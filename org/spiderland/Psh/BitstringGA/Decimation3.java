@@ -13,20 +13,21 @@ public class Decimation3 extends BitstringGA {
 	}
 
 	/**
-	 * Fitness = (# of non-transitions)
+	 * Fitness = (_size - 1) - (# of transitions)
 	 * where a transition is a 0 bit next to a 1 bit (in either order)
-	 * NB: Lower is better, so best solution is 1010101010...
 	 */
 	@Override
 	protected void EvaluateIndividual(GAIndividual inIndividual) {
 		BitstringGAIndividual ind = (BitstringGAIndividual) inIndividual;
 
-		float fitness = 0;
+		float fitness = _size - 1;
+		boolean prevBit = ind._bits.get(0);
 		
 		for (int i = 1; i < _size; i++) {
-			if (ind._bits.get(i) == ind._bits.get(i - 1)) {
-				fitness++;
+			if (ind._bits.get(i) != prevBit) {
+				fitness -= 1;
 			}
+			prevBit = ind._bits.get(i);
 		}
 		
 		ArrayList<Float> errors = new ArrayList<Float>();

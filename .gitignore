@@ -1,4 +1,7 @@
 *.class
 .project
 .classpath
+.settings/
+GAExperiments/
 /Run from CEFloatReg2
+/Run from CEFloatReg2 again

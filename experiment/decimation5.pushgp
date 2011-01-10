@@ -48,4 +48,3 @@ bitstring-size = 40
 survival-selection-mode = decimation
 survival-ratio = 10
 survival-tournament-size = 2
-

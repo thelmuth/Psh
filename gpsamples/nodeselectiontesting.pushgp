@@ -1,4 +1,3 @@
-# Copyright 2009-2010 Jon Klein
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -62,4 +61,3 @@ node-selection-tournament-size = 6
 
 #mutation-mode = fair
 #fair-mutation-range = .5
-
