@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 2000
-output-directory = GAExperiments/decimation2/ssmTRUNCATION/sts2sr10runs2000zzz
+output-directory = ../GAExperiments/decimation2/ssmTRUNCATION/sts2sr10runs2000zzz
 output-file-prefix = run
 output-file-suffix = .txt
 

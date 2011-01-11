@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 500
-output-directory = GAExperiments/decimation6NoXover/sts2ts1/ssmTRUNCATION/pop1000gen201runs500
+output-directory = ../GAExperiments/decimation6NoXover/sts2ts1/ssmTRUNCATION/pop1000gen201runs500
 output-file-prefix = run
 output-file-suffix = .txt
 
