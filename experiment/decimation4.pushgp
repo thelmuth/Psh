@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 1000
-output-directory = GAExperiments/decimation4/ssmDECIMATION/pop2000gen301runs1000
+output-directory = GAExperiments/decimation4NoXover/sts2ts1/ssmTRUNCATION/pop400gen1001runs1000
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -30,12 +30,12 @@ output-file-suffix = .txt
 problem-class = org.spiderland.Psh.BitstringGA.Decimation4
 individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
 
-population-size = 2000
-max-generations = 301
+population-size = 400
+max-generations = 1001
 
-tournament-size = 2
-mutation-percent = 10
-crossover-percent = 85
+tournament-size = 1
+mutation-percent = 95
+crossover-percent = 0
 
 
 ### Setup GA parameters
@@ -45,7 +45,7 @@ bitstring-size = 40
 ### Setup Optional Parameters
 
 #options: none, decimation, truncation
-survival-selection-mode = none
+survival-selection-mode = truncation
 survival-ratio = 10
 survival-tournament-size = 2
 
