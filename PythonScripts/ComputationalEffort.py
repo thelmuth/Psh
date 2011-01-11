@@ -3,12 +3,12 @@ import os
 import sys
 
 # Set these before running:
-outputDirectory = "../GAExperiments/decimation3/ssmTRUNCATION/pop2000gen401runs1000"
+outputDirectory = "../GAExperiments/decimation6NoXover/sts2ts1/ssmTRUNCATION/pop1000gen201runs500"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
-population_size = 500
-max_generations = 1001
+population_size = 1000
+max_generations = 201
 z = 0.99
 
 # Don't have to change anything below!
@@ -79,6 +79,13 @@ while (outputFilePrefix + str(i) + outputFileSuffix) in dirList:
             break
 
     i += 1
+
+
+print
+print "Success generation counts:"
+for i in range(min(success_generations), max(success_generations) + 1):
+    print "    ", i, "=", success_generations.count(i)
+
 
 print
 print "Computational Effort =", computational_effort(success_generations, runs, population_size, max_generations, z)
