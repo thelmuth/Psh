@@ -3,12 +3,12 @@ import os
 import sys
 
 # Set these before running:
-outputDirectory = "../GAExperiments/decimation6NoXover/sts2ts1/ssmTRUNCATION/pop1000gen201runs500"
+outputDirectory = "../../GAExperiments/decimation5NoXover/PerBitMut/ssmTRUNCATION/pop500gen501runs1000"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
-population_size = 1000
-max_generations = 201
+population_size = 500
+max_generations = 501
 z = 0.99
 
 # Don't have to change anything below!
@@ -22,7 +22,10 @@ def computational_effort(success_generations, runs, M, G, z):
     for i in range(G):
         effort = number_individuals_evaluated(success_generations,
                                               runs, M, i, z)
-        #print "effort(", i, ") = " + str(effort)
+        
+        # Uncomment following line to print effort per generations
+        print "effort(" +  str(i) + ") = " + str(effort)
+        
         min_effort = min(min_effort, effort)
 
     return min_effort
@@ -37,7 +40,8 @@ def number_of_required_independent_runs(success_generations, runs, i, z):
                                                                runs, i)
     if cumulative_probability == 0 or cumulative_probability == 1:
         return really_huge_number
-    return int(math.ceil(math.log(1.0 - z) / math.log(1.0 - cumulative_probability)))
+    return int(math.ceil(math.log(1.0 - z) / math.log(1.0 - cumulative_probability))) #real one
+    #return math.log(1.0 - z) / math.log(1.0 - cumulative_probability) #no ceil
 
 def cumulative_probability_of_success(success_generations, runs, i):
     total_prob = 0.0
@@ -83,9 +87,16 @@ while (outputFilePrefix + str(i) + outputFileSuffix) in dirList:
 
 print
 print "Success generation counts:"
-for i in range(min(success_generations), max(success_generations) + 1):
-    print "    ", i, "=", success_generations.count(i)
-
+if len(success_generations) == 0:
+    print "    No Successful Generations"
+else:
+    for i in range(min(success_generations), max(success_generations) + 1):
+        print "    Runs succeeding in gen", i, "=", success_generations.count(i)
 
 print
-print "Computational Effort =", computational_effort(success_generations, runs, population_size, max_generations, z)
+computational_effort = computational_effort(success_generations, runs, population_size, max_generations, z)
+print
+print "Computational Effort =", computational_effort
+
+
+print "Number of successful runs =", len(success_generations)

@@ -10,8 +10,27 @@ abstract public class BitstringGA extends GA {
 
 	protected int _size;
 	
+	protected String _GAMutationMode;
+	protected float _GAMutationPercent;
+	
 	protected void InitFromParameters() throws Exception {
 		_size = (int) GetFloatParam("bitstring-size");
+		
+		String defaultGAMutationMode = "one-bit";
+		float defaultGAMutationPercent = 10.0f;
+		_GAMutationMode = GetParam("ga-mutation-mode", true);
+		if (_GAMutationMode == null) {
+			_GAMutationMode = defaultGAMutationMode;
+		}
+		if (!_GAMutationMode.equals("one-bit") && !_GAMutationMode.equals("per-bit")){
+			throw new Exception("ERROR: ga-mutation-mode must be set to one-bit or per-bit." + 
+					"\nCurrently set to " + _GAMutationMode);
+		}
+		
+		_GAMutationPercent = GetFloatParam("ga-mutation-percent", true);
+		if (Float.isNaN(_GAMutationPercent)) {
+			_GAMutationPercent = defaultGAMutationPercent;
+		}
 		
 		super.InitFromParameters();
 	}
@@ -87,9 +106,18 @@ abstract public class BitstringGA extends GA {
 	protected GAIndividual ReproduceByMutation(int inIndex) {
 		BitstringGAIndividual a = (BitstringGAIndividual) ReproduceByClone(inIndex);
 		
-		int index = _RNG.nextInt(a._bits.size());
-		boolean flipped = !a._bits.get(index);
-		a._bits.set(index, flipped);
+		if (_GAMutationMode.equals("one-bit")) {
+			int index = _RNG.nextInt(a._bits.size());
+			boolean flipped = !a._bits.get(index);
+			a._bits.set(index, flipped);
+		}
+		if(_GAMutationMode.equals("per-bit")){
+			for(int i = 0; i < a._bits.size(); i++){
+				if(_RNG.nextInt(100) <= _GAMutationPercent){
+					a._bits.set(i, !a._bits.get(i));
+				}
+			}
+		}
 		
 		return a;
 	}

@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 1000
-output-directory = ../GAExperiments/decimation5NoXover/sts2ts1/ssmDECIMATION/pop500gen101runs1000
+output-directory = ../GAExperiments/decimation5NoXover/PerBitMut/ssmDECIMATION/pop500gen501runs1000
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -31,7 +31,7 @@ problem-class = org.spiderland.Psh.BitstringGA.Decimation5
 individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
 
 population-size = 500
-max-generations = 101
+max-generations = 501
 
 tournament-size = 1
 mutation-percent = 95
@@ -39,8 +39,11 @@ crossover-percent = 0
 
 
 ### Setup GA parameters
-bitstring-size = 20
+bitstring-size = 40
 
+#Options: one-bit, per-bit
+ga-mutation-mode = per-bit
+ga-mutation-percent = 8
 
 ### Setup Optional Parameters
 
