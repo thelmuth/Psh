@@ -13,14 +13,13 @@
 # limitations under the License.
 
 #
-#
 # Tom Helmuth
 # 12/14/2010
 #
 
 ### Setup experimental parameters
-runs = 2000
-output-directory = ../GAExperiments/decimation2/ssmTRUNCATION/sts2sr10runs2000zzz
+runs = 1000
+output-directory = ../GAExperiments/Dec2/OneBitMutStringSize50/pop500gen1001runs1000/ssmTRUNCATION
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -33,7 +32,7 @@ individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
 population-size = 500
 max-generations = 1001
 
-tournament-size = 2
+tournament-size = 1
 mutation-percent = 10
 crossover-percent = 85
 
@@ -42,11 +41,14 @@ crossover-percent = 85
 bitstring-size = 50
 lambda = 0.5
 
+#Options: one-bit, per-bit
+ga-mutation-mode = one-bit
+#ga-mutation-percent = 10
 
 ### Setup Optional Parameters
 
 #options: none, decimation, truncation
-survival-selection-mode = decimation
+survival-selection-mode = truncation
 survival-ratio = 10
 survival-tournament-size = 2
 

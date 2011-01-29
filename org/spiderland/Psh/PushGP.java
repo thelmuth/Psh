@@ -210,6 +210,7 @@ abstract public class PushGP extends GA {
 		super.InitFromParameters();
 		
 		// Print important parameters
+		/*
 		if (_verbose) {
 			Print("  Important Parameters\n");
 			Print(" ======================\n");
@@ -249,6 +250,7 @@ abstract public class PushGP extends GA {
 
 			Print("\n");
 		}
+		*/
 		
 	}
 

@@ -3,7 +3,7 @@ import os
 import sys
 
 # Set these before running:
-outputDirectory = "../../GAExperiments/decimation5NoXover/PerBitMut/ssmTRUNCATION/pop500gen501runs1000"
+outputDirectory = "../../GAExperiments/Debs4Bit/OneBitMutStringSize40/pop500gen501runs1000/ssmNONEregtourneysize7"
 outputFilePrefix = "run"
 outputFileSuffix = ".txt"
 
@@ -38,7 +38,7 @@ def number_individuals_evaluated(success_generations, runs, M, i, z):
 def number_of_required_independent_runs(success_generations, runs, i, z):
     cumulative_probability = cumulative_probability_of_success(success_generations,
                                                                runs, i)
-    if cumulative_probability == 0 or cumulative_probability == 1:
+    if cumulative_probability == 0.0 or cumulative_probability >= 1.0:
         return really_huge_number
     return int(math.ceil(math.log(1.0 - z) / math.log(1.0 - cumulative_probability))) #real one
     #return math.log(1.0 - z) / math.log(1.0 - cumulative_probability) #no ceil
@@ -92,6 +92,14 @@ if len(success_generations) == 0:
 else:
     for i in range(min(success_generations), max(success_generations) + 1):
         print "    Runs succeeding in gen", i, "=", success_generations.count(i)
+
+
+#Temp code to remove successes from gen 0
+#print success_generations
+#while success_generations.count(0) > 0:
+#    success_generations.remove(0)
+#print success_generations
+
 
 print
 computational_effort = computational_effort(success_generations, runs, population_size, max_generations, z)

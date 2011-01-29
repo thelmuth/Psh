@@ -63,7 +63,7 @@ public abstract class GA implements Serializable {
 	protected float _bestMeanFitness;
 	protected ArrayList<Float> _bestErrors;
 	protected double _populationMeanFitness;
-	protected int _bestIndividual; //TODO make sure this is maintained
+	protected int _bestIndividual;
 
 
 	/**
@@ -303,6 +303,30 @@ public abstract class GA implements Serializable {
 			_alsoPrintToOutput = true;
 		}
 		
+		// Print the parameters
+		PrintParameters();
+		
+	}
+
+	private void PrintParameters() throws Exception {
+		
+		Print(" Parameters \n");
+		Print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		
+		ArrayList<String> sortedParameters = new ArrayList<String>();
+		for(String param : _parameters.keySet()){
+			sortedParameters.add(param);
+		}
+		
+		Collections.sort(sortedParameters);
+		
+		for(String param : sortedParameters){
+			Print(param + " = " + _parameters.get(param) + "\n");
+		}
+
+		Print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		Print("\n\n");
+		
 	}
 
 	/**
@@ -453,7 +477,6 @@ public abstract class GA implements Serializable {
 	 * portion of the population chosen from for reproduction.
 	 */
 	protected void SurvivalSelection() throws Exception {
-		// TODO Auto-generated method stub
 
 		if (_survivalSelectionMode.equals("none")) {
 			return;
@@ -466,7 +489,6 @@ public abstract class GA implements Serializable {
 					"Unrecognized value for _survivalSelectionMode: "
 							+ _survivalSelectionMode);
 		}
-		
 	}
 
 	/**
@@ -517,8 +539,7 @@ public abstract class GA implements Serializable {
 	 * the population array, based on a loser tournament selection.
 	 */
 	protected void DecimationSelection() {
-		// TODO Auto-generated method stub
-
+	
 		// Loop from last index in population to the one just after
 		// _survivalPopulationSize, using tournaments of size
 		// _decimationTournamentSize. Each iteration, move the loser of the
@@ -533,6 +554,17 @@ public abstract class GA implements Serializable {
 			_populations[_currentPopulation][i] = _populations[_currentPopulation][tourneyLoser];
 			_populations[_currentPopulation][tourneyLoser] = swaptemp;
 			
+			
+			//TODO REMOVE - print the pop
+//			System.out.println("Pop: ");
+//			for(int qq = 0; qq < _populations[_currentPopulation].length; qq++){
+//				System.out.println(_populations[_currentPopulation][qq].GetFitness());
+//			}
+//			
+//			System.out.println("tourney loser = " + tourneyLoser + "\n\n");
+//			System.exit(0);
+			
+			
 			// Check if best individual has been moved
 			// NB: Although unlikely, this could happen if many individuals
 			// tie for the best fitness
@@ -546,13 +578,11 @@ public abstract class GA implements Serializable {
 	}
 
 	private int GetTourneyLoser(int inIndex) {
-		// TODO Auto-generated method stub
 	
 		int worstIndex = -1;
 		float worstFitness = -1;
 		
-
-		for (int j = inIndex; j < _populations[_currentPopulation].length; j++) {
+		for (int j = 0; j < _decimationTournamentSize; j++) {
 			int selectedIndividual = -1;
 			
 			if(_trivialGeographyRadius > 0) {

@@ -49,12 +49,23 @@ abstract public class BitstringGA extends GA {
 	@Override
 	protected String Report() {
 		String report = super.Report();
-		
+
 		report += "Best individual: "
-			+ _populations[_currentPopulation][_bestIndividual]
-			+ "\n";
-		report += "Best fitness: " + _bestMeanFitness
-				+ "\n\n";
+				+ _populations[_currentPopulation][_bestIndividual] + "\n";
+		report += "Best fitness: " + _bestMeanFitness + "\n\n";
+
+		// Find worst individual that was allowed to reproduce
+		int worstIndividual = 0;
+		float worstFitness = _populations[_currentPopulation][0].GetFitness();
+		for(int i = 1; i < _survivalPopulationSize; i++){
+			if(_populations[_currentPopulation][i].GetFitness() > worstFitness){
+				worstIndividual = i;
+				worstFitness = _populations[_currentPopulation][i].GetFitness();
+			}
+		}
+		report += "Worst reproducing individual: "
+				+ _populations[_currentPopulation][worstIndividual] + "\n";
+		report += "Worst reproducing individual's fitness: " + worstFitness + "\n\n";
 
 		report += "Population mean fitness: " + _populationMeanFitness + "\n";
 		report += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n\n";

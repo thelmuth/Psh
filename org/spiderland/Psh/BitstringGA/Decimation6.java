@@ -7,20 +7,23 @@ import org.spiderland.Psh.GAIndividual;
 public class Decimation6 extends BitstringGA {
 	private static final long serialVersionUID = 1L;
 	
+	private int _blockSize = 5;
+	
 	protected void InitFromParameters() throws Exception {
 		
 		super.InitFromParameters();
-		if (_size % 8 != 0) {
-			throw new Exception(
-					"For Deb's Deceptive 8-bit Function, bitstring-size must be divisible by 8.");
+		if (_size % _blockSize != 0) {
+			throw new Exception("For Deb's Deceptive " + _blockSize
+					+ "-bit Function, bitstring-size must be divisible by "
+					+ _blockSize + ".");
 		}
 	}
 
 	/**
-	 * "Deb's Deceptive 8-bit Function"
-	 * There are (_size / 8) sub-functions that are summed, where each
+	 * "Deb's Deceptive _blockSize-bit Function"
+	 * There are (_size / _blockSize) sub-functions that are summed, where each
 	 * sub-function is the following:
-	 * - if all 8 bits are 1s: 0
+	 * - if all _blockSize bits are 1s: 0
 	 * - else : 2 + [number of 1s]
 	 * where trying to minimize fitness to 0. Best individual has all 1s.
 	 */
@@ -30,8 +33,8 @@ public class Decimation6 extends BitstringGA {
 
 		float fitness = 0;
 		
-		for (int i = 0; i < _size; i += 8) {
-			fitness += DebsDeceptive8Bit(ind, i);
+		for (int i = 0; i < _size; i += _blockSize) {
+			fitness += DebsDeceptiveBit(ind, i);
 		}
 		
 		ArrayList<Float> errors = new ArrayList<Float>();
@@ -40,16 +43,16 @@ public class Decimation6 extends BitstringGA {
 		inIndividual.SetErrors(errors);
 	}
 	
-	private float DebsDeceptive8Bit(BitstringGAIndividual ind, int startIndex) {
+	private float DebsDeceptiveBit(BitstringGAIndividual ind, int startIndex) {
 		int countOnes = 0;
 		
-		for(int i = startIndex; i < startIndex + 8; i++){
+		for(int i = startIndex; i < startIndex + _blockSize; i++){
 			if(ind._bits.get(i) == true){
 				countOnes++;
 			}
 		}
 		
-		if(countOnes == 8){
+		if(countOnes == _blockSize){
 			return 0;
 		}
 		

@@ -14,18 +14,25 @@
 
 #
 # Tom Helmuth
-# 12/14/2010
+# 1/16/2011
 #
+
+### Setup experimental parameters
+runs = 1000
+output-directory = ../GAExperiments/Dec1/OneBitMutStringSize50/pop500gen1001runs1000/ssmTRUNCATION
+output-file-prefix = run
+output-file-suffix = .txt
+
 
 ### Setup required parameters
 
 problem-class = org.spiderland.Psh.BitstringGA.Decimation1
 individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
 
-population-size = 200
-max-generations = 500
+population-size = 500
+max-generations = 1001
 
-tournament-size = 7
+tournament-size = 1
 mutation-percent = 5
 crossover-percent = 85
 
@@ -34,7 +41,15 @@ crossover-percent = 85
 bitstring-size = 50
 lambda = 0.5
 
+#Options: one-bit, per-bit
+ga-mutation-mode = one-bit
+#ga-mutation-percent = 10
+
 
 ### Setup Optional Parameters
 
+#options: none, decimation, truncation
+survival-selection-mode = truncation
+survival-ratio = 10
+survival-tournament-size = 2
 

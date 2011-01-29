@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 1000
-output-directory = ../GAExperiments/decimation4NoXover/sts2ts1/ssmTRUNCATION/pop400gen1001runs1000
+output-directory = ../GAExperiments/Dec4/OneBitMutStringSize40/pop500gen1001runs1000/ssmTRUNCATION
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -30,7 +30,7 @@ output-file-suffix = .txt
 problem-class = org.spiderland.Psh.BitstringGA.Decimation4
 individual-class = org.spiderland.Psh.BitstringGA.BitstringGAIndividual
 
-population-size = 400
+population-size = 500
 max-generations = 1001
 
 tournament-size = 1
@@ -41,6 +41,10 @@ crossover-percent = 0
 ### Setup GA parameters
 bitstring-size = 40
 
+
+#Options: one-bit, per-bit
+ga-mutation-mode = one-bit
+#ga-mutation-percent = 10
 
 ### Setup Optional Parameters
 
