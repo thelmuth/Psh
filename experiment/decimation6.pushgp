@@ -20,7 +20,7 @@
 
 ### Setup experimental parameters
 runs = 1000
-output-directory = ../GAExperiments/Debs5Bit/OneBitMutStringSize40/pop1000gen1001runs1000/ssmNONE
+output-directory = ../GAExperiments/Debs5Bit/OneBitMutStringSize40/pop1000gen1001runs1000/ssmNONEregtourneysize3
 output-file-prefix = run
 output-file-suffix = .txt
 
@@ -34,7 +34,7 @@ population-size = 1000
 max-generations = 1001
 
 
-tournament-size = 1
+tournament-size = 3                       # this is 1 for decimation or truncation
 mutation-percent = 95
 crossover-percent = 0
 
